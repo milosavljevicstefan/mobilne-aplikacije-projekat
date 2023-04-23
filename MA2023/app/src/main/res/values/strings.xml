@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MA2023</string>
+    <string name="dugmePrijava">Prijava</string>
+    <string name="dugmeRegistracija">Registracija</string>
+    <string name="dugmeGost">Igraj kao gost</string>
+
+</resources>
