@@ -1,8 +1,10 @@
-package com.example.ma2023;
+package com.example.ma2023.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.ma2023.R;
 
 public class KoZnaZna extends AppCompatActivity {
 
