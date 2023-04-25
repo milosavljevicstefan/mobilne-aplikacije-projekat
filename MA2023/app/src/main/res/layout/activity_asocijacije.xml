@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AsocijacijeActivity">
+
+    <EditText
+        android:id="@+id/editTextNumber"
+        android:layout_width="61dp"
+        android:layout_height="39dp"
+        android:clickable="false"
+        android:drawableTint="#FFFFFF"
+        android:ems="10"
+        android:foreground="@color/design_default_color_primary_variant"
+        android:hint="11"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+
+    <EditText
+        android:id="@+id/editTextNumber2"
+        android:layout_width="61dp"
+        android:layout_height="39dp"
+        android:clickable="false"
+        android:drawableTint="#FFFFFF"
+        android:ems="10"
+        android:foreground="@android:color/holo_red_dark"
+        android:hint="11"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.896"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="98dp"
+        android:layout_height="25dp"
+        android:text="Ukupno poena"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <Button
+        android:id="@+id/button6n1"
+        android:layout_width="183dp"
+        android:layout_height="49dp"
+        android:text="Sledeca igra"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.941" />
+
+    <TableLayout
+        android:layout_width="409dp"
+        android:layout_height="585dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="56dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

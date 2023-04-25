@@ -7,21 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.ma2023.MainActivity;
 import com.example.ma2023.R;
 
-public class RegisterActivity extends AppCompatActivity {
+public class SkockoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_skocko);
 
-        //REGISTRUJ SE dugme
-        final Button btn2n1 = findViewById(R.id.button2n1);
-        btn2n1.setOnClickListener(new View.OnClickListener() {
+
+        final Button btn7n1 = findViewById(R.id.button7n1);
+        btn7n1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, PocetnaStranaActivity.class);
+                Intent intent = new Intent(SkockoActivity.this, KorakPoKorakActivity.class);
                 startActivity(intent);
             }
         });

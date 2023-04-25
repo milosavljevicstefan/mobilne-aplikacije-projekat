@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/button1n1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Uloguj se"
@@ -79,15 +79,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.431" />
 
-    <TextView
-        android:id="@+id/registerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/button1n3"
+        android:layout_width="248dp"
+        android:layout_height="54dp"
+        android:text="Igraj kao gost"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.905" />
+
+    <Button
+        android:id="@+id/button1n2"
+        android:layout_width="185dp"
+        android:layout_height="48dp"
         android:text="REGISTRUJ SE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.393"
+        app:layout_constraintHorizontal_bias="0.446"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.766" />
+        app:layout_constraintVertical_bias="0.771" />
 </androidx.constraintlayout.widget.ConstraintLayout>

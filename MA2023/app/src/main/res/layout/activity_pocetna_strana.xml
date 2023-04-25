@@ -6,8 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".activities.PocetnaStranaActivity">
 
+
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button3n1"
+        android:layout_width="139dp"
+        android:layout_height="103dp"
+        android:text="ZAPOCNI IGRU"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.427" />
+
+    <Button
+        android:id="@+id/button3n2"
         android:layout_width="92dp"
         android:layout_height="43dp"
         android:text="OPCIJE"
@@ -18,8 +32,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.553" />
 
+
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button3n3"
         android:layout_width="92dp"
         android:layout_height="43dp"
         android:text="IZADJII"
@@ -30,15 +45,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.672" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="139dp"
-        android:layout_height="103dp"
-        android:text="ZAPOCNI IGRU"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.427" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
