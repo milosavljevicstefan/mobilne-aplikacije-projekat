@@ -45,5 +45,14 @@ public class PocetnaStranaActivity extends AppCompatActivity {
             }
         });
 
+        final Button btn3n2 = findViewById(R.id.button3n2);
+        btn3n2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(PocetnaStranaActivity.this, ProfilKorisnika.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 }

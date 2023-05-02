@@ -59,7 +59,7 @@ public class SpojniceActivity extends AppCompatActivity {
         final Button btn5n11 = findViewById(R.id.button5n11);
         btn5n11.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(SpojniceActivity.this, SpojniceActivity.class);
+                Intent intent = new Intent(SpojniceActivity.this, AsocijacijeActivity.class);
                 startActivity(intent);
             }
         });
