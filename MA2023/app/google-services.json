@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "322139414866",
+    "firebase_url": "https://ns-mobilne-aplikacije-projekat-default-rtdb.firebaseio.com",
+    "project_id": "ns-mobilne-aplikacije-projekat",
+    "storage_bucket": "ns-mobilne-aplikacije-projekat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322139414866:android:35b2829a8f38d6f3bd1a8b",
+        "android_client_info": {
+          "package_name": "com.example.ma2023"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "322139414866-bt7cs7qqpfbm76fngcm21l552m02d36r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDKfHA8JlSbNF6LuxK4VN8CFcnUIh0az0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "322139414866-bt7cs7qqpfbm76fngcm21l552m02d36r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
