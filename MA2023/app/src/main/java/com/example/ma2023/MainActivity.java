@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.button1n1);
 
         mAuth = FirebaseAuth.getInstance();
-
 //        firestore = FirebaseFirestore.getInstance();
 //        Map<String, Object> korisnik = new HashMap<>();
 //        korisnik.put("Ime", "Stefan");
