@@ -26,10 +26,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.SocketHandler;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
+    private String serverName = "com.ftn.server";
+    private int serverPort = 13;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
