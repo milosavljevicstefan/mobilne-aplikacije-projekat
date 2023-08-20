@@ -16,23 +16,42 @@ import com.example.ma2023.MainActivity;
 import com.example.ma2023.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import org.mindrot.jbcrypt.BCrypt;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity<global> extends AppCompatActivity {
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
+    ArrayList<String> listaUsername = new ArrayList<>();
+    ArrayList<String> listaEmail = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        firestore.collection("korisnici").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String username = documentSnapshot.getString("username");
+                        String email = documentSnapshot.getString("email");
+
+                        listaUsername.add(username);
+                        listaEmail.add(email);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreData", "Greška pri pristupu Firestore-u: " + e.getMessage());
+                });
+
 
         // REGISTRUJ SE dugme
         final Button btn2n1 = findViewById(R.id.button2n1);
@@ -82,6 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText usernameEditText = findViewById(R.id.editTextDate);
         EditText emailEditText = findViewById(R.id.editEmail);
         EditText passwordEditText = findViewById(R.id.editTextTextPassword3);
+        final boolean[] retVal = {true};
 
         String imePrezime = imePrezimeEditText.getText().toString().trim();
         if (imePrezime.isEmpty()) {
@@ -91,14 +111,16 @@ public class RegisterActivity extends AppCompatActivity {
             imePrezimeEditText.setError("Unesite ime i prezime odvojene razmakom");
             return false;
         }
-
-        //DODATI: PROVERA DA LI U BAZI VEC POSTOJI KORISNIK SA TIM KORISNICKIM IMENOM
+        for (String e : listaEmail) {
+            if (emailEditText.getText().toString().trim().equals(e)) {
+                emailEditText.setError("Taj email vec postoji");
+                return false;
+            }
+        }
         if (usernameEditText.getText().toString().isEmpty()) {
             usernameEditText.setError("Morate uneti korisničko ime");
             return false;
         }
-
-        //DODATI: PROVERA DA LI U BAZI VEC POSTOJI KORISNIK SA TOM EMAIL ADRESOM
         String email = emailEditText.getText().toString().trim();
         if (email.isEmpty()) {
             emailEditText.setError("Morate uneti email");
@@ -116,7 +138,13 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Morate prihvatiti uslove koriscenja", Toast.LENGTH_LONG).show();
             return false;
         }
+        for (String username : listaUsername) {
+            if (username.equals(usernameEditText.getText().toString().trim())) {
+                usernameEditText.setError("Taj username vec postoji!");
+                return false;
+            }
 
+        }
         return true;
     }
 }
