@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import com.example.ma2023.activities.PocetnaStranaActivity;
 import com.example.ma2023.activities.RegisterActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //ULOGUJ SE dugme
+        // ULOGUJ SE dugme
         final Button btn1n1 = findViewById(R.id.button1n1);
         btn1n1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,33 +81,26 @@ public class MainActivity extends AppCompatActivity {
                 String emailUnos = emailEditText.getText().toString();
                 String passwordUnos = passwordEditText.getText().toString();
 
-                firestore.collection("korisnici")
-                        .whereEqualTo("email", emailUnos)
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                // Use Firebase Authentication to sign in with email and password
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(emailUnos, passwordUnos)
+                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        // Get email and password fields from the document
-                                        String email = documentSnapshot.getString("email");
-                                        String password = documentSnapshot.getString("password");
-                                        if (emailUnos.equals(email) && passwordUnos.equals(password)) {
-                                            Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
-                                            startActivity(intent);
-                                        }
-                                        // Do something with the email and password
-                                        Log.d("FirestoreData", "Email: " + email + ", Password: " + password);
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        // User signed in, proceed to the next activity
+                                        Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Log.e("FirebaseAuth", "User is null");
                                     }
                                 } else {
-                                    Log.d("FirestoreData", "No matching documents found.");
+                                    // If sign in fails, display a message to the user.
+                                    Log.e("FirebaseAuth", "Sign-in failed", task.getException());
+                                    // Display an error message to the user, e.g., using a Toast
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e("FirestoreData", "Error getting documents: " + e.getMessage());
                             }
                         });
             }
