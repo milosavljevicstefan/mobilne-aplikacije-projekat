@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -30,12 +31,15 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.SocketHandler;
+import io.socket.client.Socket;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
     private String serverName = "com.ftn.server";
     private int serverPort = 13;
+    private  ChatApplication app;
+    private Socket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText emailEditText = findViewById(R.id.editTextTextEmailAddress);
         final EditText passwordEditText = findViewById(R.id.editTextTextPassword);
         Button loginButton = findViewById(R.id.button1n1);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
 //        firestore = FirebaseFirestore.getInstance();
@@ -90,16 +95,35 @@ public class MainActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
-                                        // User signed in, proceed to the next activity
-                                        Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        Log.e("FirebaseAuth", "User is null");
+                                        String userId = user.getUid(); // Preuzmite ID prijavljenog korisnika
+                                        Query query = db.collection("users").whereEqualTo("user_id", userId); // Prilagodite ovoj liniji prema stvarnoj strukturi vaše baze
+
+                                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                Log.d("LoginProcess", "onComplete triggered");
+                                                if (task.isSuccessful()) {
+                                                    app = new ChatApplication();
+                                                    mSocket = app.getSocket();
+                                                    Log.d("LoginProcess", "idSocketa: " + mSocket.id());
+                                                    Konekcija appb = (Konekcija) MainActivity.this.getApplication();
+                                                    Log.d("LoginProcess", task.getResult().toString());
+                                                    Socket socket = appb.setSocket(mSocket);
+                                                    Log.d("LoginProcess", socket.toString());
+                                                    Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
+                                                    startActivity(intent);
+                                                } else {
+                                                    Log.e("LoginProcces", "fail");
+                                                    Toast.makeText(MainActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                                                    emailEditText.setText("");
+                                                    passwordEditText.setText("");
+                                                }
+                                            }
+                                        });
                                     }
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.e("FirebaseAuth", "Sign-in failed", task.getException());
-                                    // Display an error message to the user, e.g., using a Toast
+                                    Log.e("LoginProcces", "User is null");
                                 }
                             }
                         });
