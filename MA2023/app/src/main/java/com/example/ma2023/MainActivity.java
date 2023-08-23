@@ -15,89 +15,106 @@ import android.widget.Toast;
 
 import com.example.ma2023.activities.PocetnaStranaActivity;
 import com.example.ma2023.activities.RegisterActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.SocketHandler;
+import io.socket.client.Socket;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
+    private String serverName = "com.ftn.server";
+    private int serverPort = 13;
+    private  ChatApplication app;
+    private Socket mSocket;
+
+
     private EditText emailEditText;
     private EditText passwordEditText;
-    private FirebaseFirestore firestore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firestore = FirebaseFirestore.getInstance();
-        emailEditText = findViewById(R.id.editTextTextEmailAddress);
-        passwordEditText = findViewById(R.id.editTextTextPassword);
+
+        final EditText emailEditText = findViewById(R.id.editTextTextEmailAddress);
+        final EditText passwordEditText = findViewById(R.id.editTextTextPassword);
+        Button loginButton = findViewById(R.id.button1n1);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+
+
 
         TextView userNotFoundTextView = findViewById(R.id.userNotFoundTextView);
         userNotFoundTextView.setVisibility(View.GONE);
 
-        Button loginButton = findViewById(R.id.button1n1);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+
+        // ULOGUJ SE dugme
+        final Button btn1n1 = findViewById(R.id.button1n1);
+        btn1n1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validateEmail() | !validatePassword()) {
-                    // Validation failed, do nothing or show an error message
-                    Log.d("LoginValidation", "Validation failed");
-                } else {
+                String emailUnos = emailEditText.getText().toString();
+                String passwordUnos = passwordEditText.getText().toString();
 
-                    String emailUnos = emailEditText.getText().toString();
-                    String passwordUnos = passwordEditText.getText().toString();
-
-                    firestore.collection("korisnici")
-                            .whereEqualTo("email", emailUnos)
-                            .get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    if (!queryDocumentSnapshots.isEmpty()) {
-                                        userNotFoundTextView.setVisibility(View.GONE);
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            String email = documentSnapshot.getString("email");
-                                            String password = documentSnapshot.getString("password");
-                                            if (emailUnos.equals(email) && passwordUnos.equals(password)) {
-                                                Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
-                                                startActivity(intent);
-                                            } else {
-                                                Log.d("FirestoreData", "Invalid credentials.");
-                                            }
-                                        }
-                                    } else {
-                                        userNotFoundTextView.setVisibility(View.VISIBLE);
-                                        Log.d("FirestoreData", "No matching documents found.");
-
-                                        // Delay hiding the warning message for 5 seconds
-                                        new Handler().postDelayed(new Runnable() {
+                // Use Firebase Authentication to sign in with email and password
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(emailUnos, passwordUnos)
+                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                    if (user != null) {
+                                        String userId = user.getUid(); 
+                                        Query query = db.collection("users").whereEqualTo("user_id", userId);
+                                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
-                                            public void run() {
-                                                userNotFoundTextView.setVisibility(View.GONE);
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                Log.d("LoginProcess", "onComplete triggered");
+                                                if (task.isSuccessful()) {
+                                                    app = new ChatApplication();
+                                                    mSocket = app.getSocket();
+                                                    Log.d("LoginProcess", "idSocketa: " + mSocket.id());
+                                                    Konekcija appb = (Konekcija) MainActivity.this.getApplication();
+                                                    Log.d("LoginProcess", task.getResult().toString());
+                                                    Socket socket = appb.setSocket(mSocket);
+                                                    Log.d("LoginProcess", socket.toString());
+                                                    Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
+                                                    startActivity(intent);
+                                                } else {
+                                                    Log.e("LoginProcces", "fail");
+                                                    Toast.makeText(MainActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                                                    emailEditText.setText("");
+                                                    passwordEditText.setText("");
+                                                }
                                             }
-                                        }, 5000); // 5000 milliseconds = 5 seconds
+                                        });
                                     }
+                                } else {
+                                    Log.e("LoginProcces", "User is null");
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e("FirestoreData", "Error getting documents: " + e.getMessage());
-                                }
-                            });
-                }
+                            }
+                        });
+
             }
         });
 
