@@ -5,6 +5,7 @@ import android.util.Log;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 import java.net.URISyntaxException;
 
@@ -13,10 +14,8 @@ public class ChatApplication extends Application {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://10.0.2.2:3001");
-            Log.d("LoginProcess", "uspesan chatapp: " + mSocket);
+            mSocket = IO.socket("http://192.168.1.3:2411");
         } catch (URISyntaxException e) {
-            Log.d("LoginProcess", "ne valja");
             throw new RuntimeException(e);
         }
     }

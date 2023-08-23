@@ -29,8 +29,8 @@ import io.socket.emitter.Emitter;
 public class PocetnaStranaActivity extends AppCompatActivity {
     private Socket mSocket;
     private QueryDocumentSnapshot user;
-    private String bname;
-    private String rname;
+    private String aName;
+    private String bName;
     private int turn;
     private ChatApplication app;
     private PocetnaStranaActivity ps = this;
@@ -44,10 +44,8 @@ public class PocetnaStranaActivity extends AppCompatActivity {
         this.mSocket = app.getSocket();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser userF = auth.getCurrentUser();
-        String playerName = userF.getDisplayName();
-        Log.d("fireStoreGet", "Display Name: " + playerName + ", Email: " + userF.getEmail());
+        this.bName = userF.getDisplayName();
 
-        this.rname = userF.getDisplayName();
 
         mSocket.on("pleyer1", (a) -> {
             Tost();
@@ -59,10 +57,8 @@ public class PocetnaStranaActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
         });
-        mSocket.on("startMatch", (a) -> {
 
-            StartMatch(a);
-        });
+
         mSocket.on("podaci", (a) -> {
 
 
@@ -74,19 +70,22 @@ public class PocetnaStranaActivity extends AppCompatActivity {
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-            bname = mapa.get("a").toString();
-            rname = mapa.get("b").toString();
+            aName = mapa.get("a").toString();
+            bName = mapa.get("b").toString();
+            Log.i("login", bName + aName);
 
 
         });
-
+        mSocket.on("startMatch", (a) -> {
+            StartMatch(a);
+        });
 
         // ZAPOCNI IGRU dugme
         final Button btn3n1 = findViewById(R.id.button3n1);
         btn3n1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d("ButtonClickListener", "Start Game button clicked");
-
+                mSocket.connect();
             }
         });
 
@@ -94,6 +93,7 @@ public class PocetnaStranaActivity extends AppCompatActivity {
         final Button btn3n3 = findViewById(R.id.button3n3);
         btn3n3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                mSocket.close();
                 Intent intent = new Intent(PocetnaStranaActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -112,6 +112,15 @@ public class PocetnaStranaActivity extends AppCompatActivity {
     }
     public void StartMatch( Object a){
         Log.d("Login", "start match");
+//        mSocket.emit("Imena");
+        Intent intent = new Intent(getApplicationContext(), KoZnaZnaActivity.class);
+        intent.putExtra("aName", aName);
+        intent.putExtra("bName", bName);
+        intent.putExtra("aScore", "0");
+        intent.putExtra("bScore", "0");
+        intent.putExtra("turn", turn);
+        Log.d("login", "a: " + aName + " b: " + bName);
+        startActivity(intent);
 
 
 
@@ -119,15 +128,16 @@ public class PocetnaStranaActivity extends AppCompatActivity {
     public void Tost() {
         runOnUiThread(() -> Toast.makeText(ps, "weiting for other pleyer !", Toast.LENGTH_SHORT).show());
         this.turn = 1;
-        mSocket.emit("Ime", rname);
+        mSocket.emit("Ime", bName);
+        mSocket.emit("register");
     }
 
     public void Tost2() throws InterruptedException {
         runOnUiThread(() -> Toast.makeText(ps, "Match will start soon !", Toast.LENGTH_SHORT).show());
         this.turn = 2;
-        mSocket.emit("Ime", rname);
+        mSocket.emit("Ime", bName);
         mSocket.emit("Imena");
-        mSocket.emit("start");
+        mSocket.emit("register");
     }
 
 }
