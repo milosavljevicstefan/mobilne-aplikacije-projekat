@@ -1,10 +1,15 @@
 package com.example.ma2023.activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -15,6 +20,7 @@ import com.example.ma2023.MainActivity;
 import com.example.ma2023.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -27,6 +33,10 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class PocetnaStranaActivity extends AppCompatActivity {
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ActionBarDrawerToggle drawerToggle;
     private Socket mSocket;
     private QueryDocumentSnapshot user;
     private String aName;
@@ -40,12 +50,50 @@ public class PocetnaStranaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pocetna_strana);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.otvoriteMeni,R.string.zetvoriteMeni);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId())
+                {
+                    case R.id.pocetna:
+                    {
+                        Toast.makeText(PocetnaStranaActivity.this, "Povratak na pocetnu stranu", Toast.LENGTH_SHORT).show();
+                    }
+                    case R.id.profil:
+                    {
+                        Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste profil", Toast.LENGTH_SHORT).show();
+                    }
+                    case R.id.rangLista:
+                    {
+                        Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste rang listu", Toast.LENGTH_SHORT).show();
+                    }
+                    case R.id.prijatelji:
+                    {
+                        Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste prijatelje", Toast.LENGTH_SHORT).show();
+                    }
+                    case R.id.odjava:
+                    {
+                        Toast.makeText(PocetnaStranaActivity.this, "Odjavljivanje", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return false;
+            }
+        });
+
+
         Konekcija app = (Konekcija) PocetnaStranaActivity.this.getApplication();
         this.mSocket = app.getSocket();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser userF = auth.getCurrentUser();
         this.bName = userF.getDisplayName();
-
+        Log.d("displayName", "display ime" + bName);
 
         mSocket.on("pleyer1", (a) -> {
             Tost();
@@ -89,7 +137,7 @@ public class PocetnaStranaActivity extends AppCompatActivity {
             }
         });
 
-        //IZADJI dugme
+/*        //IZADJI dugme
         final Button btn3n3 = findViewById(R.id.button3n3);
         btn3n3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -98,8 +146,9 @@ public class PocetnaStranaActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
+/*
         final Button btn3n2 = findViewById(R.id.button3n2);
         btn3n2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -108,6 +157,7 @@ public class PocetnaStranaActivity extends AppCompatActivity {
                 finish();
             }
         });
+*/
 
     }
     public void StartMatch( Object a){
@@ -138,6 +188,25 @@ public class PocetnaStranaActivity extends AppCompatActivity {
         mSocket.emit("Ime", bName);
         mSocket.emit("Imena");
         mSocket.emit("register");
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        if(drawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed(){
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            super.onBackPressed();
+
+        }
     }
 
 }
