@@ -178,7 +178,6 @@ public class RegisterActivity<global> extends AppCompatActivity {
                     }
                 });
     }
-}
 
     private boolean validateFields(boolean isCheckBoxChecked) {
         EditText imePrezimeEditText = findViewById(R.id.editImePrezime);
