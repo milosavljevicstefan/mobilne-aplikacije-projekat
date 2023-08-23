@@ -97,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
                                                     Log.d("LoginProcess", task.getResult().toString());
                                                     Socket socket = appb.setSocket(mSocket);
                                                     Log.d("LoginProcess", socket.toString());
-                                                    Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, "Uspesno prijavljen!", Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
                                                     startActivity(intent);
                                                 } else {
                                                     Log.e("LoginProcces", "fail");
-                                                    Toast.makeText(MainActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(MainActivity.this, "Neuspesna prijava!", Toast.LENGTH_SHORT).show();
                                                     emailEditText.setText("");
                                                     passwordEditText.setText("");
                                                 }
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Log.e("LoginProcces", "User is null");
+                                    Toast.makeText(MainActivity.this, "Neispravni podaci!!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

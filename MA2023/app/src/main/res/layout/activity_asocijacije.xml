@@ -7,7 +7,7 @@
     tools:context=".activities.AsocijacijeActivity">
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/editTextAScore"
         android:layout_width="61dp"
         android:layout_height="39dp"
         android:clickable="false"
@@ -26,7 +26,7 @@
 
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/editTextBScore"
         android:layout_width="61dp"
         android:layout_height="39dp"
         android:clickable="false"
