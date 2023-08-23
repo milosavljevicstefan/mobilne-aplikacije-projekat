@@ -45,7 +45,7 @@ public class PocetnaStranaActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser userF = auth.getCurrentUser();
         this.bName = userF.getDisplayName();
-
+        Log.d("displayName", "display ime" + bName);
 
         mSocket.on("pleyer1", (a) -> {
             Tost();

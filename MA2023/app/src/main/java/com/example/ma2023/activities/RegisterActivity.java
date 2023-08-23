@@ -46,19 +46,6 @@ public class RegisterActivity<global> extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        firestore.collection("korisnici").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        String username = documentSnapshot.getString("username");
-                        String email = documentSnapshot.getString("email");
-
-                        listaUsername.add(username);
-                        listaEmail.add(email);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirestoreData", "Greška pri pristupu Firestore-u: " + e.getMessage());
-                });
 
 
         // REGISTRUJ SE dugme
@@ -118,17 +105,21 @@ public class RegisterActivity<global> extends AppCompatActivity {
                                                     // User registration success
                                                     FirebaseUser user = mAuth.getCurrentUser();
 
-                                                    // Set the username as the display name
                                                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                             .setDisplayName(username)
                                                             .build();
-                                                    user.updateProfile(profileUpdates);
-
-                                                    // Now you can proceed to save additional user data to Firestore
+                                                    Log.d("displayName", "Setting display name to: " + username);
+                                                    user.updateProfile(profileUpdates)
+                                                            .addOnCompleteListener(taskk -> {
+                                                                if (taskk.isSuccessful()) {
+                                                                    Log.d("displayName", "Display name updated successfully");
+                                                                } else {
+                                                                    Log.e("displayName", "Error updating display name: " + task.getException());
+                                                                }
+                                                            });
                                                     saveUserDataToFirestore(user);
-
                                                     // Start the main activity or any other desired activity
-                                                    Intent intent = new Intent(RegisterActivity.this, PocetnaStranaActivity.class);
+                                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                                     startActivity(intent);
                                                 } else {
                                                     // User registration failed
@@ -149,6 +140,8 @@ public class RegisterActivity<global> extends AppCompatActivity {
                         }
                     }
                 });
+
+
     }
 
     private void saveUserDataToFirestore(FirebaseUser user) {
