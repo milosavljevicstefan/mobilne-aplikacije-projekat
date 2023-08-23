@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,17 +34,24 @@ import java.util.Map;
 import java.util.logging.SocketHandler;
 import io.socket.client.Socket;
 
+
 public class MainActivity extends AppCompatActivity {
+
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth;
     private String serverName = "com.ftn.server";
     private int serverPort = 13;
     private  ChatApplication app;
     private Socket mSocket;
+
+
+    private EditText emailEditText;
+    private EditText passwordEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         final EditText emailEditText = findViewById(R.id.editTextTextEmailAddress);
         final EditText passwordEditText = findViewById(R.id.editTextTextPassword);
@@ -51,31 +59,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
-//        firestore = FirebaseFirestore.getInstance();
-//        Map<String, Object> korisnik = new HashMap<>();
-//        korisnik.put("Ime", "Stefan");
-//        korisnik.put("Prezime", "Milosavljević");
-//        korisnik.put("username", "milo");
-//        korisnik.put("email", "milo@example.com");
-//        String password = "milo";
-//        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-//        korisnik.put("password", hashedPassword);
-//        korisnik.put("profilePicture", "url_to_profile_picture1");
-//        korisnik.put("tokens", 5);
-//        korisnik.put("stars", 0);
-//
-//        firestore.collection("korisnici").add(korisnik).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//            @Override
-//            public void onSuccess(DocumentReference documentReference) {
-//                Toast.makeText(getApplicationContext(),"Success", Toast.LENGTH_LONG).show();
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(getApplicationContext(),"Failure", Toast.LENGTH_LONG).show();
-//            }
-//        });
 
+
+
+        TextView userNotFoundTextView = findViewById(R.id.userNotFoundTextView);
+        userNotFoundTextView.setVisibility(View.GONE);
 
 
         // ULOGUJ SE dugme
@@ -95,9 +83,8 @@ public class MainActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
-                                        String userId = user.getUid(); // Preuzmite ID prijavljenog korisnika
-                                        Query query = db.collection("users").whereEqualTo("user_id", userId); // Prilagodite ovoj liniji prema stvarnoj strukturi vaše baze
-
+                                        String userId = user.getUid(); 
+                                        Query query = db.collection("users").whereEqualTo("user_id", userId);
                                         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -127,11 +114,12 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
             }
         });
 
         //REGISTRUJ SE dugme
-        final Button btn1n2 = findViewById(R.id.button1n2);
+        Button btn1n2 = findViewById(R.id.button1n2);
         btn1n2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -140,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //IGRAJ KAO GOST dugme
-        final Button btn1n3 = findViewById(R.id.button1n3);
+        Button btn1n3 = findViewById(R.id.button1n3);
         btn1n3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
@@ -148,7 +136,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public Boolean validateEmail() {
+        String val = emailEditText.getText().toString();
+        if (val.isEmpty()) {
+            emailEditText.setError("Morate uneti email");
+            return false;
+        } else {
+            emailEditText.setError(null);
+            return true;
+        }
+    }
+
+    public Boolean validatePassword() {
+        String val = passwordEditText.getText().toString();
+        if (val.isEmpty()) {
+            passwordEditText.setError("Morate uneti sifru");
+            return false;
+        } else {
+            passwordEditText.setError(null);
+            return true;
+        }
+    }
 }
+
+
+//        firestore = FirebaseFirestore.getInstance();
+//        Map<String, Object> korisnik = new HashMap<>();
+//        korisnik.put("Ime", "Stefan");
+//        korisnik.put("Prezime", "Milosavljević");
+//        korisnik.put("username", "milo");
+//        korisnik.put("email", "milo@example.com");
+//        String password = "milo";
+//        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+//        korisnik.put("password", hashedPassword);
+//        korisnik.put("profilePicture", "url_to_profile_picture1");
+//        korisnik.put("tokens", 5);
+//        korisnik.put("stars", 0);
+//
+//        firestore.collection("korisnici").add(korisnik).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//            @Override
+//            public void onSuccess(DocumentReference documentReference) {
+//                Toast.makeText(getApplicationContext(),"Success", Toast.LENGTH_LONG).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getApplicationContext(),"Failure", Toast.LENGTH_LONG).show();
+//            }
+//        });
+
 
 
 

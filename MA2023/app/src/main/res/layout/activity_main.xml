@@ -20,6 +20,18 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
+    <TextView
+        android:id="@+id/userNotFoundTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ne postoji korisnik sa unetim kredencijalima."
+        android:textColor="#FF0000"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/button1n1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="258dp"
