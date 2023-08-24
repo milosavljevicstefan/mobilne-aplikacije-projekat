@@ -29,10 +29,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.mindrot.jbcrypt.BCrypt;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.SocketHandler;
-import io.socket.client.Socket;
 
 
 public class MainActivity extends AppCompatActivity {

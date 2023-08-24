@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/pocetna"
+            android:title="Pocetna"
+            android:icon="@drawable/baseline_home_24" />
+
+        <item
+            android:id="@+id/profil"
+            android:title="Profil"
+            android:icon="@drawable/baseline_menu_book_24"/>
+
+
+        <item
+            android:id="@+id/rangLista"
+            android:title="Rang lista"
+            android:icon="@drawable/baseline_insert_chart_outlined_24"/>
+
+        <item
+            android:id="@+id/prijatelji"
+            android:title="Prijatelji"
+            android:icon="@drawable/baseline_people_alt_24"/>
+
+        <item
+            android:id="@+id/razmak"
+            android:title=""/>
+
+
+    </group>
+
+
+    <item
+        android:title=""
+        android:orderInCategory="99"
+        android:id="@+id/menu_separator">
+    </item>
+
+    <item
+        android:title=""
+        android:orderInCategory="100"
+        android:id="@+id/menu_bottom_padding"
+        android:paddingTop="8dp">
+        <menu>
+            <item
+                android:id="@+id/odjava"
+                android:title="Odjavi se"
+                android:icon="@drawable/baseline_exit_to_app_24"/>
+        </menu>
+    </item>
+
+</menu>

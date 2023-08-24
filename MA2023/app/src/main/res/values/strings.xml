@@ -3,5 +3,9 @@
     <string name="dugmePrijava">Prijava</string>
     <string name="dugmeRegistracija">Registracija</string>
     <string name="dugmeGost">Igraj kao gost</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="meni">Glavni meni</string>
+    <string name="otvoriteMeni">Otvorite glavni meni</string>
+    <string name="zetvoriteMeni">Zatvorite glavni meni</string>
 </resources>
