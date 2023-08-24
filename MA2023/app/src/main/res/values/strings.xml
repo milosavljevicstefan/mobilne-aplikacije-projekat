@@ -8,4 +8,5 @@
     <string name="meni">Glavni meni</string>
     <string name="otvoriteMeni">Otvorite glavni meni</string>
     <string name="zetvoriteMeni">Zatvorite glavni meni</string>
+    <string name="title_activity_profil">ProfilActivity</string>
 </resources>
