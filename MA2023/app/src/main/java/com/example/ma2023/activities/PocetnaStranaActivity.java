@@ -64,23 +64,35 @@ public class PocetnaStranaActivity extends AppCompatActivity {
                 {
                     case R.id.pocetna:
                     {
-                        Toast.makeText(PocetnaStranaActivity.this, "Povratak na pocetnu stranu", Toast.LENGTH_SHORT).show();
+                        Log.d("drawable", "upao u pocetnu");
+                        Intent intent = new Intent(PocetnaStranaActivity.this, PocetnaStranaActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     case R.id.profil:
                     {
-                        Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste profil", Toast.LENGTH_SHORT).show();
+                        Log.d("drawable", "upao u profil");
+                        Intent intent = new Intent(PocetnaStranaActivity.this, ProfilKorisnika.class);
+                        startActivity(intent);
+                        finish();
                     }
                     case R.id.rangLista:
                     {
+                        Log.d("drawable", "upao u rangListu");
                         Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste rang listu", Toast.LENGTH_SHORT).show();
                     }
                     case R.id.prijatelji:
                     {
+                        Log.d("drawable", "upao u prijatelje");
                         Toast.makeText(PocetnaStranaActivity.this, "Izabrali ste prijatelje", Toast.LENGTH_SHORT).show();
                     }
                     case R.id.odjava:
                     {
-                        Toast.makeText(PocetnaStranaActivity.this, "Odjavljivanje", Toast.LENGTH_SHORT).show();
+                        Log.d("drawable", "upao u odjavu");
+                        mSocket.close();
+                        Intent intent = new Intent(PocetnaStranaActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
                 return false;
