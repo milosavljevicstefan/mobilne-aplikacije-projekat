@@ -73,6 +73,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
 
 
 
+
    /*     drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -83,6 +84,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         drawerToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
 
 
 
