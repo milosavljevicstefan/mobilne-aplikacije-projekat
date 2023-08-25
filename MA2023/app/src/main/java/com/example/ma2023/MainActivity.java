@@ -32,7 +32,10 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.SocketHandler;
 
@@ -62,10 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+//        firestore = FirebaseFirestore.getInstance()
+//        Map<String, Object> pitanje10 = new HashMap<>();
+//        pitanje10.put("tekst_pitanja", "Koji je srpski srednjevekovni manastir poznat po freskama koje prikazuju 'Bitku na Kosovu'?");
+//        pitanje10.put("tacan_odgovor", "Sopoćani");
+//        List<String> pogresniOdgovori10 = new ArrayList<>();
+//        pogresniOdgovori10.add("Manasija");
+//        pogresniOdgovori10.add("Studenica");
+//        pogresniOdgovori10.add("Dečani");
+//        pitanje10.put("pogresni_odgovori", pogresniOdgovori10);
+//
+//        firestore.collection("pitanja").add(pitanje10);
 
-
-        TextView userNotFoundTextView = findViewById(R.id.userNotFoundTextView);
-        userNotFoundTextView.setVisibility(View.GONE);
 
 
         // ULOGUJ SE dugme

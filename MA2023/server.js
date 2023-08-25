@@ -1,4 +1,5 @@
 let a,b;
+let masterSocket, slaveSocket;
 let aime = 1,bime = 1;
 const players = []; // An array to keep track of connected players
 
@@ -9,8 +10,8 @@ const socket = require('socket.io');
 const server = http.createServer(app);
 const io = socket(server);
 
-server.listen(2411,'192.168.0.27', () => {
-  console.log('listening on 192.168.0.27:2411');
+server.listen(2411,'192.168.1.3', () => {
+  console.log('listening on 192.168.1.3:2411');
 });
 
 
@@ -19,19 +20,30 @@ io.on('connection', (socket) => {
     if(a == null )
     {
         a = socket.id;
+	slaveSocket = a;
         io.to(socket.id).emit("pleyer1",true);
     }
     else{  
       if(b == null){
         b = socket.id;
+	masterSocket = b;
         io.to(socket.id).emit("pleyer2",true);
        
       }
     }
-     socket.on('register', () => {
+socket.on('pitanjaReady', (socketId) => {
+	console.log("Usao u pitanjaReady");
+        if (socketId === masterSocket) {
+            io.to(masterSocket).emit("spremiIgru", true);
+        }
+    });
+     socket.on('register', async () => {
         players.push(socket.id); // Register the player's socket ID
         if (players.length === 2) {
-            io.emit("startMatch", true); // Emit startMatch event to both players
+            io.emit("startMatch", true);
+		console.log(socket.id);await new Promise(resolve => setTimeout(resolve, 1000));
+            io.to(socket.id).emit("spremiIgru", true); 
+            // Emit startMatch event to both players
         }
     });
     
@@ -119,7 +131,13 @@ socket.on('disconnect', () => {
         // Reset both players if they are disconnected
         a = null;
         b = null;
+	masterSocket = null;
+	slaveSocket = null;
 	aime = 1;
     	bime = 1;
     });
+socket.on('runduDataRedirect', (data) => {
+    io.emit('runduData', data); // Emit JSON string
+});
+
 });
