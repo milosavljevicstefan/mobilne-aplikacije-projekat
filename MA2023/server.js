@@ -9,8 +9,8 @@ const socket = require('socket.io');
 const server = http.createServer(app);
 const io = socket(server);
 
-server.listen(2411,'192.168.0.27', () => {
-  console.log('listening on 192.168.0.27:2411');
+server.listen(2411,'192.168.0.26', () => {
+  console.log('listening on 192.168.0.26:2411');
 });
 
 

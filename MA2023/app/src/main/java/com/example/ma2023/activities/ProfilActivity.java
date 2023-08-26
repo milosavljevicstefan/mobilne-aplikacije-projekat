@@ -15,9 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfilActivity extends AppCompatActivity {
-    EditText editName, editEmail, editUsername, editPassword;
-    Button saveButton;
+    EditText  editEmail, editUsername;
+    Button changePhoto;
+/*
     String nameUser, emailUser, usernameUser, passwordUser;
+*/
     DatabaseReference reference;
 
     @Override
@@ -27,36 +29,19 @@ public class ProfilActivity extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("users");
 
-        editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
         editUsername = findViewById(R.id.editUsername);
-        editPassword = findViewById(R.id.editPassword);
-        saveButton = findViewById(R.id.saveButton);
+        changePhoto = findViewById(R.id.changePhoto);
 
+/*
         showData();
+*/
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isNameChanged() || isEmailChanged() || isPasswordChanged()) {
-                    Toast.makeText(ProfilActivity.this, "Sacuvano", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProfilActivity.this, "Podaci nisu promenjeni", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
     }
 
-    public boolean isNameChanged(){
-        if (!nameUser.equals(editName.getText().toString())){
-            reference.child(usernameUser).child("name").setValue(editName.getText().toString());
-            nameUser = editName.getText().toString();
-            return true;
-        } else{
-            return false;
-        }
-    }
 
+/*
     public boolean isEmailChanged(){
         if (!emailUser.equals(editName.getText().toString())){
             reference.child(usernameUser).child("email").setValue(editEmail.getText().toString());
@@ -66,28 +51,14 @@ public class ProfilActivity extends AppCompatActivity {
             return false;
         }
     }
+*/
 
-    public boolean isPasswordChanged(){
-        if (!passwordUser.equals(editPassword.getText().toString())){
-            reference.child(usernameUser).child("password").setValue(editPassword.getText().toString());
-            passwordUser = editPassword.getText().toString();
-            return true;
-        } else{
-            return false;
-        }
-    }
-
+/*
     public void showData(){
         Intent intent = getIntent();
-
-        nameUser = intent.getStringExtra("name");
         emailUser = intent.getStringExtra("email");
         usernameUser = intent.getStringExtra("username");
-        passwordUser = intent.getStringExtra("password");
-
-        editName.setText(nameUser);
         editEmail.setText(emailUser);
         editUsername.setText(usernameUser);
-        editPassword.setText(passwordUser);
-    }
+    }*/
 }

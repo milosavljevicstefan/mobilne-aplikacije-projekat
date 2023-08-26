@@ -5,9 +5,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.ma2023.ChatApplication;
 import com.example.ma2023.Konekcija;
-import com.example.ma2023.MainActivity;
 import com.example.ma2023.R;
-import com.example.ma2023.fragments.ProfilFragment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.navigation.NavigationView;
@@ -30,12 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.net.URISyntaxException;
 import java.util.Map;
 
-import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class PocetnaStranaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -175,6 +166,13 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
             case R.id.profil:
                 Intent intent = new Intent(PocetnaStranaActivity.this, ProfilActivity.class);
                 startActivity(intent);break;
+            case R.id.rangLista:
+                Intent intent2 = new Intent(PocetnaStranaActivity.this, RangActivity.class);
+                startActivity(intent2);break;
+            case R.id.prijatelji:
+                Intent intent3 = new Intent(PocetnaStranaActivity.this, PrijateljiActivity.class);
+                startActivity(intent3);break;
+
         }
         return true;
     }
