@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.ma2023.R;
 
@@ -15,7 +16,16 @@ public class SpojniceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spojnice);
-
+        Intent intent = getIntent();
+        TextView aName = findViewById(R.id.textViewAName);
+        TextView bName = findViewById(R.id.textViewBName);
+        TextView aScore = findViewById(R.id.editTextBName2);
+        TextView bScore = findViewById(R.id.editTextBName5);
+        aName.setText(intent.getStringExtra("aName"));
+        bName.setText(intent.getStringExtra("bName"));
+        //ovo ne radi
+        aScore.setText(intent.getStringExtra("aScore"));
+        bScore.setText(intent.getStringExtra("bScore"));
         //PLAVA POLJA
 //        final Button btn5n1 = findViewById(R.id.button5n1);
 //        btn5n1.setOnClickListener(new View.OnClickListener() {

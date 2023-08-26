@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.ma2023.Konekcija;
@@ -27,9 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaService.OnPitanjaLoadedListener {
 
@@ -53,8 +57,8 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         Intent intent = getIntent();
         TextView aName = findViewById(R.id.editTextAName);
         TextView bName = findViewById(R.id.editTextBName);
-        TextView aScore = findViewById(R.id.editTextBName3);
-        TextView bScore = findViewById(R.id.editTextBName4);
+        TextView aScore = findViewById(R.id.editTextBName4);
+        TextView bScore = findViewById(R.id.editTextBName3);
         aName.setText(intent.getStringExtra("aName"));
         bName.setText(intent.getStringExtra("bName"));
         //ovo ne radi
@@ -66,8 +70,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         final Button btn4n1 = findViewById(R.id.button4n1);
         btn4n1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                startActivity(intent);
+
             }
         });
 
@@ -75,8 +78,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         final Button btn4n2 = findViewById(R.id.button4n2);
         btn4n2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                startActivity(intent);
+
             }
         });
 
@@ -84,8 +86,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         final Button btn4n3 = findViewById(R.id.button4n3);
         btn4n3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                startActivity(intent);
+
             }
         });
 
@@ -93,8 +94,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         final Button btn4n4 = findViewById(R.id.button4n4);
         btn4n4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent();
-                startActivity(intent);
+
             }
         });
 
@@ -104,11 +104,20 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         buttons.add(btn4n4);
 
         mSocket.on("spremiIgru", (a) -> {
-            Log.d("koZnaZna", "Usao u spremiIgru");
-            if (pitanjaZaIgru != null && !pitanjaZaIgru.isEmpty()) {
-                Pitanje pitanje = pitanjaZaIgru.get(runda.getAndIncrement());
-                JSONObject runduData = prepareRunduData(pitanje);
-                this.mSocket.emit("runduDataRedirect", runduData.toString()); // Emit to all sockets
+            Log.d("koZnaZna", "Usao u spremiIgru" + Integer.valueOf(String.valueOf(runda)));
+            if (Integer.valueOf(String.valueOf(runda)) < 5) {
+                if (pitanjaZaIgru != null && !pitanjaZaIgru.isEmpty()) {
+                    Pitanje pitanje = pitanjaZaIgru.get(runda.getAndIncrement());
+                    JSONObject runduData = prepareRunduData(pitanje);
+                    this.mSocket.emit("runduDataRedirect", runduData.toString()); // Emit to all sockets
+                }
+            }
+            else if (Integer.valueOf(String.valueOf(runda)) == 5) {
+                intent.putExtra("aName", aName.getText());
+                intent.putExtra("bName", bName.getText());
+                intent.putExtra("aScore", aScore.getText());
+                intent.putExtra("bScore", bScore.getText());
+                this.mSocket.emit("pocniSpojnice");
             }
         });
 
@@ -127,12 +136,54 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
             }
         });
 
+        mSocket.on("updateBar", (value) -> {
+           updateBar(Integer.valueOf(String.valueOf(value)));
+        });
+
+        mSocket.on("obradaBodovaKoZnaZna", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if (args.length >= 2) {
+                    int bodoviA = (int) args[0];
+                    int bodoviB = (int) args[1];
+
+                    // Update the UI with the received points
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int currentAScore = Integer.parseInt(aScore.getText().toString());
+                            int currentBScore = Integer.parseInt(bScore.getText().toString());
+
+                            aScore.setText(String.valueOf(currentAScore + bodoviA));
+                            bScore.setText(String.valueOf(currentBScore + bodoviB));
+                            mSocket.emit("sledecaRundaKoZnaZna");
+                        }
+                    });
+                }
+            }
+        });
+
+        mSocket.on("pocetakSpojniceJava", (data) -> {
+
+            Intent intentSpojnice = new Intent(KoZnaZnaActivity.this, SpojniceActivity.class);
+            //put data in intent
+            intentSpojnice.putExtra("aName", aName.getText());
+            intentSpojnice.putExtra("bName", bName.getText());
+            intentSpojnice.putExtra("aScore", aScore.getText());
+            intentSpojnice.putExtra("bScore", bScore.getText());
+//            intentSpojnice.putExtra("turn", turn);
+            startActivity(intentSpojnice);
+        });
         //SLEDECA IGRA dugme
         final Button btn4n5 = findViewById(R.id.button4n5);
         btn4n5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(KoZnaZnaActivity.this, SpojniceActivity.class);
-                startActivity(intent);
+                if (Integer.valueOf(String.valueOf(runda)) < 5) {
+                    mSocket.emit("sledecaRundaKoZnaZna");
+                } else {
+                    Intent intent = new Intent(KoZnaZnaActivity.this, SpojniceActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -152,6 +203,8 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
                 buttons.get(i).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.d("koZnaZna", "Uspesan listener");
+                        mSocket.emit("tacanOdgovorKoZnaZna");
                     }
                 });
             } else {
@@ -159,10 +212,13 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
                 buttons.get(i).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.d("koZnaZna", "Uspesan listener");
+                        mSocket.emit("netacanOdgovorKoZnaZna");
                     }
                 });
             }
         }
+        simulateProgressBar();
     }
 
     @Override
@@ -184,5 +240,36 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
             e.printStackTrace();
         }
         return data;
+    }
+
+    private void simulateProgressBar() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            int value = 0;
+
+            @Override
+            public void run() {
+                value += 10;
+                if (value <= 100) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateBar(value);
+                        }
+                    });
+                } else {
+                    mSocket.emit("obradaKoZnaZna");
+                    timer.cancel();
+                }
+            }
+        };
+
+        timer.schedule(task, 0, 2500); // Run task every 2.5 seconds
+
+    }
+
+    private void updateBar(int value) {
+        ProgressBar pBar = findViewById(R.id.progressBar);
+        pBar.setProgress(value);
     }
 }

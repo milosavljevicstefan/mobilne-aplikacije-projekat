@@ -175,6 +175,10 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
             case R.id.profil:
                 Intent intent = new Intent(PocetnaStranaActivity.this, ProfilActivity.class);
                 startActivity(intent);break;
+            case R.id.odjava:
+                mSocket.close();
+                Intent intentLogOut = new Intent(PocetnaStranaActivity.this, MainActivity.class);
+                startActivity(intentLogOut);break;
         }
         return true;
     }
