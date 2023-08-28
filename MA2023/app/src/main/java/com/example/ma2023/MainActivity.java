@@ -15,11 +15,16 @@ import android.widget.Toast;
 
 import com.example.ma2023.activities.PocetnaStranaActivity;
 import com.example.ma2023.activities.RegisterActivity;
+import com.example.ma2023.model.Asocijacija;
+import com.example.ma2023.model.Kolona;
+import com.example.ma2023.model.Par;
+import com.example.ma2023.model.Spojnica;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +39,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +69,52 @@ public class MainActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.button1n1);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        mAuth = FirebaseAuth.getInstance();
-
+//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+//        CollectionReference asocijacijeCollection = firestore.collection("asocijacije");
+//
+//        // Primer za jednu Asocijaciju sa četiri kolone
+//        List<String> poljaKolone1 = Arrays.asList("Istina", "Podrum", "Mušica", "Bure");
+//        List<String> poljaKolone2 = Arrays.asList("Skandinav.", "Kraljevina", "Nobel", "Oslo");
+//        List<String> poljaKolone3 = Arrays.asList("Moljac", "Petrolej", "Aladin", "Signal");
+//        List<String> poljaKolone4 = Arrays.asList("Tocak", "Lopta", "Obli", "Tanjir");
+//
+//        Kolona kolona1 = new Kolona(poljaKolone1, "Vino");
+//        Kolona kolona2 = new Kolona(poljaKolone2, "Svedska");
+//        Kolona kolona3 = new Kolona(poljaKolone3, "Lampa");
+//        Kolona kolona4 = new Kolona(poljaKolone4, "Okrugli");
+//
+//        List<Kolona> kolone = Arrays.asList(kolona1, kolona2, kolona3, kolona4);
+//        String konacnoResenje = "Sto";
+//        Asocijacija asocijacije = new Asocijacija(kolone, konacnoResenje);
+//        asocijacijeCollection.add(asocijacije);
+//
+//        List<String> poljaKolone1a = Arrays.asList("Noć", "Let", "Pevačica", "Perspektiva");
+//        List<String> poljaKolone2a = Arrays.asList("Kći.", "Čizme", "Mreža", "Lola");
+//        List<String> poljaKolone3a = Arrays.asList("Pauk", "KK Radnički", "Pohodi", "Ratovi");
+//        List<String> poljaKolone4a = Arrays.asList("Lavovi", "Dvor", "Rum", "Luk");
+//
+//        Kolona kolona1a = new Kolona(poljaKolone1a, "Ptica");
+//        Kolona kolona2a = new Kolona(poljaKolone2a, "Ribar");
+//        Kolona kolona3a = new Kolona(poljaKolone3a, "Krstaš");
+//        Kolona kolona4a = new Kolona(poljaKolone4a, "Beli");
+//
+//        List<Kolona> kolonea = Arrays.asList(kolona1a, kolona2a, kolona3a, kolona4a);
+//        String konacnoResenjea = "Orao";
+//        Asocijacija asocijacijea = new Asocijacija(kolonea, konacnoResenjea);
+//        asocijacijeCollection.add(asocijacijea);
+//
+//
+//
+//        List<Par> parovi = new ArrayList<>();
+//        parovi.add(new Par("key1", "value1"));
+//        parovi.add(new Par("key2", "value2"));
+//        parovi.add(new Par("key3", "value3"));
+//        parovi.add(new Par("key4", "value4"));
+//        parovi.add(new Par("key5", "value5"));
+//
+//        Spojnica spojnicaa = new Spojnica("Test 2", parovi);
+//
+//        firestore.collection("spojnice").add(spojnicaa);
 //        firestore = FirebaseFirestore.getInstance()
 //        Map<String, Object> pitanje10 = new HashMap<>();
 //        pitanje10.put("tekst_pitanja", "Koji je srpski srednjevekovni manastir poznat po freskama koje prikazuju 'Bitku na Kosovu'?");
