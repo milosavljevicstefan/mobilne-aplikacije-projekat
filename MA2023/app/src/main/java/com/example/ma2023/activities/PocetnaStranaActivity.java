@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.ma2023.ChatApplication;
 import com.example.ma2023.Konekcija;
+import com.example.ma2023.MainActivity;
 import com.example.ma2023.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,10 +38,19 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
     private QueryDocumentSnapshot user;
     private String aName;
     private String bName;
+
+    //Podaci korisnika za prosledjivanje
+    private String userEmail, userPassword;
+
     private int turn;
     private ChatApplication app;
     private PocetnaStranaActivity ps = this;
 
+    private FirebaseAuth auth;
+
+    //1.dodati prilikom logovanje proveru koliko bodovoa ima prijavljeni igrac
+    //ako ima npr 0-10 rangI, 10-50 rangII, 50+ rangIII poslati  notifikaciju
+    //ako je promeni rang. sve notf cuvati u bazi, prikazati pocetna->rang->dugme(sve notf)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Nakon dodavanja ove linije jebene je poceo da prikazuje stranice
+        //Nakon dodavanja ove linije je poceo da prikazuje stranice
         navigationView.bringToFront();
 
         drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.otvoriteMeni,R.string.zetvoriteMeni);
@@ -63,7 +73,10 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
+        //Podaci korisnika poslati iz MainAc
+        Intent intent = getIntent();
+        userEmail = intent.getStringExtra("userEmail");
+        userPassword = intent.getStringExtra("userPassword");
 
    /*     drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -85,7 +98,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
 
         Konekcija app = (Konekcija) PocetnaStranaActivity.this.getApplication();
         this.mSocket = app.getSocket();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         FirebaseUser userF = auth.getCurrentUser();
         this.bName = userF.getDisplayName();
         Log.d("displayName", "display ime" + bName);
@@ -164,15 +177,26 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
                 Toast.makeText(PocetnaStranaActivity.this, "Povratak na pocetnu stranu", Toast.LENGTH_SHORT).show();break;
 
             case R.id.profil:
-                Intent intent = new Intent(PocetnaStranaActivity.this, ProfilActivity.class);
-                startActivity(intent);break;
+                Intent profilIntent = new Intent(PocetnaStranaActivity.this, ProfilActivity.class);
+                profilIntent.putExtra("userEmail", userEmail); // userEmail is from onCreate
+                profilIntent.putExtra("userPassword", userPassword); // userPassword is from onCreate
+                // Print the retrieved data to the console using Log
+                Log.d("UserEmail", "User Email: " + userEmail);
+                Log.d("UserPassword", "User Password: " + userPassword);
+                startActivity(profilIntent);
+                break;
             case R.id.rangLista:
                 Intent intent2 = new Intent(PocetnaStranaActivity.this, RangActivity.class);
                 startActivity(intent2);break;
             case R.id.prijatelji:
                 Intent intent3 = new Intent(PocetnaStranaActivity.this, PrijateljiActivity.class);
                 startActivity(intent3);break;
+            case R.id.odjava:
+                auth.signOut();
+                signOutUser();
 
+                Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
+                break;
         }
         return true;
     }
@@ -227,5 +251,11 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         }
     }
 
+    private void signOutUser(){
+        Intent intent = new Intent(PocetnaStranaActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
 
 }

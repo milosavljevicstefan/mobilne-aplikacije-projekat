@@ -1,64 +1,84 @@
 package com.example.ma2023.activities;
 
+import android.content.Intent;
 
+import android.os.Bundle;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.ma2023.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
 
 public class ProfilActivity extends AppCompatActivity {
-    EditText  editEmail, editUsername;
-    Button changePhoto;
-/*
-    String nameUser, emailUser, usernameUser, passwordUser;
-*/
-    DatabaseReference reference;
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private TextView profileEmail, profileUsername;
+    private FirebaseUser currentUser;
+    private String userEmail;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        reference = FirebaseDatabase.getInstance().getReference("users");
+        profileEmail = findViewById(R.id.editEmail);
+        profileUsername = findViewById(R.id.editUsername);
 
-        editEmail = findViewById(R.id.editEmail);
-        editUsername = findViewById(R.id.editUsername);
-        changePhoto = findViewById(R.id.changePhoto);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
 
-/*
-        showData();
-*/
-
-
-    }
-
-
-/*
-    public boolean isEmailChanged(){
-        if (!emailUser.equals(editName.getText().toString())){
-            reference.child(usernameUser).child("email").setValue(editEmail.getText().toString());
-            emailUser = editEmail.getText().toString();
-            return true;
-        } else{
-            return false;
-        }
-    }
-*/
-
-/*
-    public void showData(){
         Intent intent = getIntent();
-        emailUser = intent.getStringExtra("email");
-        usernameUser = intent.getStringExtra("username");
-        editEmail.setText(emailUser);
-        editUsername.setText(usernameUser);
-    }*/
+        userEmail = intent.getStringExtra("userEmail");
+
+        if (currentUser != null && userEmail != null) {
+            String userEmail = currentUser.getEmail();
+            profileEmail.setText(userEmail);
+            queryUserByUsername(userEmail);
+        }
+
+
+    }
+
+
+
+
+
+    public void queryUserByUsername(String userEmail) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("korisnici")
+                .whereEqualTo("email", userEmail)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String username = document.getString("username");
+                            if (username != null) {
+                                showUserData(username, userEmail);
+                            } else {
+                                // Handle case when username is not found
+                            }
+                        }
+                    } else {
+                        // Handle Firestore query error
+                    }
+                });
+    }
+
+    public void showUserData(String userUsername, String userEmail) {
+        String modifiedUsername = "Korisnicko ime: " + userUsername;
+        profileUsername.setText(modifiedUsername);
+
+        String modifiedEmail = "Email: " + userEmail;
+        profileEmail.setText(modifiedEmail);
+    }
 }
