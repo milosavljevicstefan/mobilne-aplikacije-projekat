@@ -63,7 +63,6 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Nakon dodavanja ove linije jebene je poceo da prikazuje stranice
         navigationView.bringToFront();
 
         drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.otvoriteMeni,R.string.zetvoriteMeni);
@@ -186,7 +185,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
     public void StartMatch( Object a){
         Log.d("Login", "start match");
 //        mSocket.emit("Imena");
-        Intent intent = new Intent(getApplicationContext(), KoZnaZnaActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SpojniceActivity.class);
         intent.putExtra("aName", aName);
         intent.putExtra("bName", bName);
         intent.putExtra("aScore", "0");

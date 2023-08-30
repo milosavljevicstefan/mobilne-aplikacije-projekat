@@ -4,20 +4,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.ma2023.Konekcija;
 import com.example.ma2023.R;
+import com.example.ma2023.model.Spojnica;
+import com.example.ma2023.service.SpojnicaService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import io.socket.client.Socket;
 
-public class SpojniceActivity extends AppCompatActivity {
+public class SpojniceActivity extends AppCompatActivity implements SpojnicaService.OnSpojniceLoadedListener {
+    List<Spojnica> spojniceZaIgru;
     private Socket mSocket;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {;
+    protected void onCreate(Bundle savedInstanceState) {
+        Konekcija app = (Konekcija) SpojniceActivity.this.getApplication();
+        this.mSocket = app.getSocket();
+        SpojnicaService spojnicaService = new SpojnicaService(this);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser userF = auth.getCurrentUser();
         super.onCreate(savedInstanceState);
@@ -76,5 +87,14 @@ public class SpojniceActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onSpojniceLoaded(List<Spojnica> spojnice) {
+        spojniceZaIgru = spojnice;
+        Log.d("spojnice", "Pitanja ucitana");
+        if (mSocket != null) {
+            Log.d("spojnice", "Ovde saljemo emit");
+        }
     }
 }

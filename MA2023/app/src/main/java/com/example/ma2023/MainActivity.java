@@ -17,6 +17,7 @@ import com.example.ma2023.activities.PocetnaStranaActivity;
 import com.example.ma2023.activities.RegisterActivity;
 import com.example.ma2023.model.Asocijacija;
 import com.example.ma2023.model.Kolona;
+import com.example.ma2023.model.KorakPoKorak;
 import com.example.ma2023.model.Par;
 import com.example.ma2023.model.Spojnica;
 import com.google.android.gms.tasks.OnCompleteListener;

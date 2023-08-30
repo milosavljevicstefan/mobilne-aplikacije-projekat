@@ -51,7 +51,7 @@ public class SpojnicaService {
                                 spojnice.add(spojnica);
                             }
                             if (listener != null) {
-                                listener.onSpojniceLoaded(spojnice);
+                                listener.onSpojniceLoaded(getTwoRandomSpojnice());
                             }
                         } else {
                             Log.d("SpojniceService", "Error getting documents: ", task.getException());
