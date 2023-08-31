@@ -64,7 +64,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Nakon dodavanja ove linije je poceo da prikazuje stranice
+
         navigationView.bringToFront();
 
         drawerToggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.otvoriteMeni,R.string.zetvoriteMeni);
@@ -177,6 +177,8 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
                 Toast.makeText(PocetnaStranaActivity.this, "Povratak na pocetnu stranu", Toast.LENGTH_SHORT).show();break;
 
             case R.id.profil:
+
+     
                 Intent profilIntent = new Intent(PocetnaStranaActivity.this, ProfilActivity.class);
                 profilIntent.putExtra("userEmail", userEmail); // userEmail is from onCreate
                 profilIntent.putExtra("userPassword", userPassword); // userPassword is from onCreate
@@ -194,7 +196,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
             case R.id.odjava:
                 auth.signOut();
                 signOutUser();
-
+        
                 Toast.makeText(this, "Logged Out!", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -204,7 +206,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
     public void StartMatch( Object a){
         Log.d("Login", "start match");
 //        mSocket.emit("Imena");
-        Intent intent = new Intent(getApplicationContext(), KoZnaZnaActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SpojniceActivity.class);
         intent.putExtra("aName", aName);
         intent.putExtra("bName", bName);
         intent.putExtra("aScore", "0");
@@ -252,10 +254,10 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
     }
 
     private void signOutUser(){
+        mSocket.close();
         Intent intent = new Intent(PocetnaStranaActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
-
     }
 
 }

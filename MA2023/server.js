@@ -1,7 +1,9 @@
 let a,b;
+let masterSocket, slaveSocket;
 let aime = 1,bime = 1;
 const players = []; // An array to keep track of connected players
-
+let prvi = 0, drugi = 0;
+let prviId, drugiId;
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -9,8 +11,9 @@ const socket = require('socket.io');
 const server = http.createServer(app);
 const io = socket(server);
 
-server.listen(2411,'192.168.0.26', () => {
-  console.log('listening on 192.168.0.26:2411');
+
+server.listen(2411,'192.168.1.3', () => {
+  console.log('listening on 192.168.1.3:2411');
 });
 
 
@@ -19,19 +22,30 @@ io.on('connection', (socket) => {
     if(a == null )
     {
         a = socket.id;
+	slaveSocket = a;
         io.to(socket.id).emit("pleyer1",true);
     }
     else{  
       if(b == null){
         b = socket.id;
+	masterSocket = b;
         io.to(socket.id).emit("pleyer2",true);
        
       }
     }
-     socket.on('register', () => {
+socket.on('pitanjaReady', (socketId) => {
+	console.log("Usao u pitanjaReady");
+        if (socketId === masterSocket) {
+            io.to(masterSocket).emit("spremiIgru", true);
+        }
+    });
+     socket.on('register', async () => {
         players.push(socket.id); // Register the player's socket ID
         if (players.length === 2) {
-            io.emit("startMatch", true); // Emit startMatch event to both players
+            io.emit("startMatch", true);
+		// console.log(socket.id);await new Promise(resolve => setTimeout(resolve, 1000));
+        //     io.to(socket.id).emit("spremiIgru", true); 
+            // Emit startMatch event to both players
         }
     });
     
@@ -110,16 +124,69 @@ io.on('connection', (socket) => {
 	aime = 1;
     	bime = 1;
     });
-socket.on('disconnect', () => {
-	console.log("disconnect");
-        const playerIndex = players.indexOf(socket.id);
-        if (playerIndex !== -1) {
-            players.splice(playerIndex, 1); // Remove the player from the array
+    socket.on('disconnect', () => {
+        console.log("disconnect");
+            const playerIndex = players.indexOf(socket.id);
+            if (playerIndex !== -1) {
+                players.splice(playerIndex, 1); // Remove the player from the array
+            }
+            // Reset both players if they are disconnected
+            a = null;
+            b = null;
+        masterSocket = null;
+        slaveSocket = null;
+        aime = 1;
+            bime = 1;
+        });
+
+    socket.on('runduDataRedirect', (data) => {
+        io.emit('runduData', data); // Emit JSON string
+    });
+    socket.on('sledecaRundaKoZnaZna', () => {
+        if(socket.id == masterSocket)
+        io.to(masterSocket).emit("spremiIgru", true);
+    });
+    socket.on('tacanOdgovorKoZnaZna', () => {
+        console.log(socket.id + " daje tacan odgovor");
+        if (prvi == 0 ) {
+            prvi = 10;
+            prviId = socket.id;
+        } else if (prvi == -5) {
+            drugi = 10;
+            drugiId = socket.id;
+        } else if (drugi == 0) {
+            drugi = 0;
+            drugiId = socket.id
+        } else {
+            console.log("Greska prilikom ucitavanja odgovora!")
         }
-        // Reset both players if they are disconnected
-        a = null;
-        b = null;
-	aime = 1;
-    	bime = 1;
+    });
+    socket.on('netacanOdgovorKoZnaZna', () => {
+        console.log(socket.id + " daje netacan odgovor");
+        if (prvi == 0 ) {
+            prvi = -5;
+            prviId = socket.id;
+        } else {
+            drugi = -5;
+            drugiId = socket.id;
+        }
+    });
+    socket.on('obradaKoZnaZna', () => {
+        console.log("Obrada rezultat: prvi=" + prvi + " drugi=" + drugi);
+        if (socket.id == masterSocket) {
+            if(prviId == a) {
+                io.emit('obradaBodovaKoZnaZna', prvi, drugi);
+                prvi = 0;
+                drugi = 0;
+            } else {
+                io.emit('obradaBodovaKoZnaZna', drugi, prvi);
+                        prvi = 0;
+                        drugi = 0;
+            }
+        }
+    });
+    socket.on('pocniSpojnice', () => {
+        console.log("pocinjuSpojnice");
+        io.emit('pocetakSpojniceJava');
     });
 });
