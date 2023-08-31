@@ -11,7 +11,13 @@ import android.view.ViewGroup;
 import com.example.ma2023.R;
 
 
-public class PocetnaStranaFragment extends Fragment {
+public class NotifikacijeFragment extends Fragment {
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
 }

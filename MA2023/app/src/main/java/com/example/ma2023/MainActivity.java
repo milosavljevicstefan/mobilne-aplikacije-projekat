@@ -158,11 +158,19 @@ public class MainActivity extends AppCompatActivity {
                                                     mSocket = app.getSocket();
                                                     Log.d("LoginProcess", "idSocketa: " + mSocket.id());
                                                     Konekcija appb = (Konekcija) MainActivity.this.getApplication();
+
                                                     Log.d("LoginProcess", task.getResult().toString());
                                                     Socket socket = appb.setSocket(mSocket);
+
                                                     Log.d("LoginProcess", socket.toString());
                                                     Toast.makeText(MainActivity.this, "Uspesno prijavljen!", Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(MainActivity.this, PocetnaStranaActivity.class);
+                                                    intent.putExtra("userEmail", emailUnos);
+                                                    intent.putExtra("userPassword", passwordUnos);
+
+                                                    // Print the retrieved data to the console using Log
+                                                    Log.d("UserEmail", "User Email: " + emailUnos);
+                                                    Log.d("UserPassword", "User Password: " + passwordUnos);
                                                     startActivity(intent);
                                                 } else {
                                                     Log.e("LoginProcces", "fail");
