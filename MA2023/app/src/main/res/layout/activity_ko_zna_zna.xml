@@ -34,13 +34,13 @@
     <EditText
         android:id="@+id/editTextBScore"
         android:layout_width="61dp"
-        android:layout_height="39dp"
+        android:layout_height="48dp"
         android:clickable="false"
         android:drawableTint="#FFFFFF"
         android:ems="10"
         android:foreground="@android:color/holo_red_dark"
         android:hint="11"
-        android:inputType="text"
+        android:inputType="number"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,13 +88,13 @@
     <EditText
         android:id="@+id/editTextAScore"
         android:layout_width="61dp"
-        android:layout_height="39dp"
+        android:layout_height="48dp"
         android:clickable="false"
         android:drawableTint="#FFFFFF"
         android:ems="10"
         android:foreground="@color/design_default_color_primary_variant"
         android:hint="11"
-        android:inputType="text"
+        android:inputType="number"
         android:text="0"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
@@ -120,7 +120,7 @@
     <Button
         android:id="@+id/button4n5"
         android:layout_width="183dp"
-        android:layout_height="47dp"
+        android:layout_height="48dp"
         android:text="Sledeca igra"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +138,7 @@
         app:layout_constraintHorizontal_bias="0.898"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.077" />
+        app:layout_constraintVertical_bias="0.089" />
 
     <TextView
         android:id="@+id/editTextBName4"
@@ -176,5 +176,19 @@
         app:layout_constraintHorizontal_bias="0.101"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.077" />
+        app:layout_constraintVertical_bias="0.088" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="315dp"
+        android:layout_height="32dp"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.396" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

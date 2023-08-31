@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/gray" /> <!-- Replace 'gray' with your desired color resource -->
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/bell"
+        android:left="16dp"
+        android:top="16dp"
+        android:bottom="16dp"
+        android:right="16dp" />
+</layer-list>

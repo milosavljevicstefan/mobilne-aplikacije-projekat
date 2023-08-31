@@ -9,9 +9,7 @@ android:gravity="center"
 android:orientation="vertical"
 android:id="@+id/activity_profil"
 tools:context=".activities.ProfilActivity">
-<!--
-android:background="@drawable/"
--->
+
 
 <TextView
     android:id="@+id/textView18"
@@ -32,73 +30,132 @@ android:background="@drawable/"
     app:cardCornerRadius="6dp"
     app:cardElevation="20dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="462dp"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <EditText
-            android:id="@+id/editName"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="40dp"
-            android:drawablePadding="8dp"
-            android:hint="Ime"
-            android:padding="8dp"
-            android:textColor="@color/black"
-            android:background="@drawable/lavender_border"
-            />
-
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/lavender_border"
-            android:drawablePadding="8dp"
-            android:hint="Email"
-            android:padding="8dp"
-            android:textColor="@color/black" />
 
 
-        <EditText
-            android:id="@+id/editUsername"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/lavender_border"
-            android:drawablePadding="8dp"
-            android:hint="Korisnicko ime"
-            android:padding="8dp"
-            android:textColor="@color/black" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/baseline_person_24"
+            android:layout_alignParentTop="true"/>
 
-        <EditText
-            android:id="@+id/editPassword"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:drawablePadding="8dp"
-            android:background="@drawable/lavender_border"
-
-            android:hint="Lozinka"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-
-            android:layout_marginTop="30dp"
-            android:backgroundTint="@color/orange"
-            android:text="Sacuvaj"
-            android:textSize="18sp"
+            android:id="@+id/changePhoto"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/imageView"
+            android:background="@drawable/baseline_settings_24"
+            android:backgroundTint="@color/black"
             app:cornerRadius="6dp" />
 
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/userRank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:text="Rank:"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp" />
+
+        <!-- TextView for dynamically inserted number -->
+        <TextView
+            android:id="@+id/userRankDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/userRank"
+            android:layout_marginTop="50dp"
+            android:text="IDIET"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp" />
+
+
+        <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border2"
+                android:drawablePadding="8dp"
+                android:hint="Korisnicko ime"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:layout_below="@+id/imageView"/>
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border2"
+                android:drawablePadding="8dp"
+                android:hint="Email"
+                android:padding="8dp"
+                android:textColor="@color/black"
+                android:layout_below="@+id/editUsername"/>
+
+        <TextView
+            android:id="@+id/textViewPlayedGames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editEmail"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="6dp"
+            android:text="Broj odigranih igara:"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp" />
+
+        <!-- TextView for dynamically inserted number -->
+        <TextView
+            android:id="@+id/textViewPlayedGamesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editEmail"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/textViewPlayedGames"
+            android:text="100"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewWinLose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="6dp"
+            android:layout_below="@+id/textViewPlayedGamesCount"
+            android:text="Procenat pobeđenih i izgubljenih partija:"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp" />
+
+        <ProgressBar
+            android:id="@+id/winLossBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewWinLose"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+
+            android:max="100"
+            android:progress="70"
+            />
+
+
+
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
 
