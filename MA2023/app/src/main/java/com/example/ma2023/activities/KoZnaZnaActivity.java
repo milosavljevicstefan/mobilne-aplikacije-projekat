@@ -55,12 +55,16 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ko_zna_zna);
         Intent intent = getIntent();
+
         TextView aName = findViewById(R.id.editTextAName);
         TextView bName = findViewById(R.id.editTextBName);
+
         TextView aScore = findViewById(R.id.editTextBName4);
         TextView bScore = findViewById(R.id.editTextBName3);
+
         aName.setText(intent.getStringExtra("aName"));
         bName.setText(intent.getStringExtra("bName"));
+
         //ovo ne radi
         aScore.setText(intent.getStringExtra("aScore"));
         bScore.setText(intent.getStringExtra("bScore"));
@@ -105,7 +109,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
 
         mSocket.on("spremiIgru", (a) -> {
             Log.d("koZnaZna", "Usao u spremiIgru" + Integer.valueOf(String.valueOf(runda)));
-            if (Integer.valueOf(String.valueOf(runda)) < 5) {
+            if (Integer.valueOf(String.valueOf(runda)) < 3) {
                 if (pitanjaZaIgru != null && !pitanjaZaIgru.isEmpty()) {
                     Pitanje pitanje = pitanjaZaIgru.get(runda.getAndIncrement());
                     JSONObject runduData = prepareRunduData(pitanje);
@@ -174,6 +178,7 @@ public class KoZnaZnaActivity extends AppCompatActivity implements PitanjaServic
 //            intentSpojnice.putExtra("turn", turn);
             startActivity(intentSpojnice);
         });
+
         //SLEDECA IGRA dugme
         final Button btn4n5 = findViewById(R.id.button4n5);
         btn4n5.setOnClickListener(new View.OnClickListener() {

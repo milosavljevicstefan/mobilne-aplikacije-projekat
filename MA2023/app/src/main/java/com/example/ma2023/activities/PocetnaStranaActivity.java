@@ -99,9 +99,11 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         Konekcija app = (Konekcija) PocetnaStranaActivity.this.getApplication();
         this.mSocket = app.getSocket();
         auth = FirebaseAuth.getInstance();
+
         FirebaseUser userF = auth.getCurrentUser();
         this.bName = userF.getDisplayName();
         Log.d("displayName", "display ime" + bName);
+
         mSocket.on("pleyer1", (a) -> {
             Tost();
         });
@@ -214,10 +216,8 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
         intent.putExtra("turn", turn);
         Log.d("login", "a: " + aName + " b: " + bName);
         startActivity(intent);
-
-
-
     }
+
     public void Tost() {
         runOnUiThread(() -> Toast.makeText(ps, "weiting for other pleyer !", Toast.LENGTH_SHORT).show());
         this.turn = 1;
