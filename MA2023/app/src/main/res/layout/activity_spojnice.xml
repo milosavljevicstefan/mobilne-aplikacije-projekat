@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".activities.SpojniceActivity">
 
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="249dp"
+        android:layout_height="25dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.419"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.148" />
+
     <EditText
         android:id="@+id/editTextBScore2"
         android:layout_width="61dp"
@@ -94,17 +106,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.444" />
 
-    <Button
-        android:id="@+id/button5n5"
-        android:layout_width="115dp"
-        android:layout_height="50dp"
-        android:text="Opcija5P"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.209"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.698" />
+
 
     <Button
         android:id="@+id/button5n4"
@@ -117,6 +119,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.571" />
+
+    <Button
+        android:id="@+id/button5n5"
+        android:layout_width="115dp"
+        android:layout_height="50dp"
+        android:text="Opcija5P"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.209"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.698" />
 
     <Button
         android:id="@+id/button5n6"
@@ -134,7 +148,7 @@
         android:id="@+id/button5n7"
         android:layout_width="115dp"
         android:layout_height="50dp"
-        android:layout_marginStart="236dp"
+        android:layout_marginStart="244dp"
         android:text="Opcija2C"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -238,6 +252,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.04" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

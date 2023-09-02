@@ -36,7 +36,7 @@ public class SpojnicaService {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("SpojniceService", document.toString());
-                                String pitanjeText = document.getString("tekst_pitanja");
+                                String pitanjeText = document.getString("tekstPitanja");
                                 List<Map<String, String>> paroviData = (List<Map<String, String>>) document.get("parovi");
 
                                 List<Par> parovi = new ArrayList<>();
@@ -70,5 +70,9 @@ public class SpojnicaService {
     public List<Spojnica> getSpojnice() {
         return spojnice;
     }
+
+
+
+
 }
 
