@@ -1,192 +1,207 @@
-let a,b;
-let masterSocket, slaveSocket;
-let aime = 1,bime = 1;
-const players = []; // An array to keep track of connected players
-let prvi = 0, drugi = 0;
-let prviId, drugiId;
 const express = require('express');
-const app = express();
 const http = require('http');
+const WebSocket = require('ws');
 const socket = require('socket.io');
+
+const app = express();
 const server = http.createServer(app);
 const io = socket(server);
+const wss = new WebSocket.Server({ server });
+let currentPlayer = 'playerA';
+let masterSocket = null;
+let slaveSocket = null;
+let aime = 1;
+let bime = 1;
+const players = [];
+let prvi = 0;
+let drugi = 0;
+let prviId;
+let drugiId;
+let a = null; 
+let b = null; 
 
+function broadcast(data) {
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
+    });
+  }
 
-server.listen(2411,'192.168.1.3', () => {
-  console.log('listening on 192.168.1.3:2411');
+  wss.on('connection', (ws) => {
+    ws.send(JSON.stringify({ currentPlayer }));
+  
+    ws.on('message', (message) => {
+      const data = JSON.parse(message);
+  
+      if (data.type === 'buttonClicked') {
+        broadcast({ currentPlayer, gameState: data.gameState });
+      } else if (data.type === 'changeTurn') {
+        currentPlayer = data.nextPlayer;
+        broadcast({ currentPlayer });
+      }
+    });
+  });
+server.listen(2411, '192.168.1.3', () => {
+  console.log('Listening on 192.168.1.3:2411');
 });
 
+function changeTurn() {
+    console.log("menjam krug");
+  currentPlayer = currentPlayer === a ? b : a;
+  io.emit('turnChange', { currentPlayer });
+}
 
 io.on('connection', (socket) => {
-    console.log("New socket connection: " + socket.id);
-    if(a == null )
-    {
-        a = socket.id;
-	slaveSocket = a;
-        io.to(socket.id).emit("pleyer1",true);
-    }
-    else{  
-      if(b == null){
-        b = socket.id;
-	masterSocket = b;
-        io.to(socket.id).emit("pleyer2",true);
-       
-      }
-    }
-socket.on('pitanjaReady', (socketId) => {
-	console.log("Usao u pitanjaReady");
-        if (socketId === masterSocket) {
-            io.to(masterSocket).emit("spremiIgru", true);
-        }
-    });
-     socket.on('register', async () => {
-        players.push(socket.id); // Register the player's socket ID
-        if (players.length === 2) {
-            io.emit("startMatch", true);
-		// console.log(socket.id);await new Promise(resolve => setTimeout(resolve, 1000));
-        //     io.to(socket.id).emit("spremiIgru", true); 
-            // Emit startMatch event to both players
-        }
-    });
-    
-  
-    socket.on('Imena', () => {
-      const person = {a:aime, b:bime};
-      io.emit("podaci",JSON.stringify(person)); 
-     
+  console.log('New socket connection: ' + socket.id);
+
+  if (!a) {
+    a = socket.id;
+    slaveSocket = a;
+    io.to(socket.id).emit('pleyer1', true);
+  } else if (!b) {
+    b = socket.id;
+    masterSocket = b;
+    io.to(socket.id).emit('pleyer2', true);
+  }
+
+  socket.on('requestTurnChange', () => {
+    changeTurn();
   });
-   socket.on('turn', async () => {
-        const otherPlayer = players.find(player => player !== socket.id);
-        if (otherPlayer) {
-            io.to(otherPlayer).emit("changeturn");
-        }
-    });
-    socket.on('turna', async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (socket.id == a) {
-            io.to(b).emit("changeturna");
-        }
-        if (socket.id == b) {
-            io.to(a).emit("changeturna");
-        }
 
-
-    });
-    socket.on('points', (ab) => {
-
-        if(socket.id == a)
-        {
-        ////////////  console.log("a");
-            io.to(b).emit("pointsc");
-        }
-        if(socket.id == b)
-        {
-            io.to(a).emit("pointsc");
-        }
-
-
-    })
-   // ovo cemo iskoristiti ali drugacije malo
-    // socket.on('passcom', async (av, bv, cv, dv) => {
-    //     const person = {a: av, b: bv, c: cv, d: dv};
-
-    //     if (socket.id == a) {
-
-    //         io.to(b).emit("passcomc", person);
-    //     }
-    //     if (socket.id == b) {
-    //         io.to(a).emit("passcomc", person);
-    //     }
-
-
-    // })
-    socket.on('Ime', (ime) => {
-       
-      if(aime == 1)
-    {
-      aime = ime;
+  socket.on('pitanjaReady', (socketId) => {
+    if (socketId === masterSocket) {
+      io.to(masterSocket).emit('spremiIgru', true);
     }
-    else{
-      if(bime == 1){
-       bime = ime;
+  });
+
+  socket.on('register', async () => {
+    players.push(socket.id);
+    if (players.length === 2) {
+      io.emit('startMatch', true);
+    }
+  });
+
+  socket.on('Imena', () => {
+    const person = { a: aime, b: bime };
+    io.emit('podaci', JSON.stringify(person));
+  });
+
+  socket.on('turn', async () => {
+    const otherPlayer = players.find((player) => player !== socket.id);
+    if (otherPlayer) {
+      io.to(otherPlayer).emit('changeturn');
+    }
+  });
+
+  socket.on('turna', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (socket.id === a) {
+      io.to(b).emit('changeturna');
+    }
+    if (socket.id === b) {
+      io.to(a).emit('changeturna');
+    }
+  });
+
+  socket.on('points', (ab) => {
+    if (socket.id === a) {
+      io.to(b).emit('pointsc');
+    }
+    if (socket.id === b) {
+      io.to(a).emit('pointsc');
+    }
+  });
+
+  socket.on('Ime', (ime) => {
+    if (aime === 1) {
+      aime = ime;
+    } else if (bime === 1) {
+      bime = ime;
+    }
+  });
+
+  socket.on('reset', () => {
+    const playerIndex = players.indexOf(socket.id);
+    if (playerIndex !== -1) {
+      players.splice(playerIndex, 1);
+    }
+    a = null;
+    b = null;
+    aime = 1;
+    bime = 1;
+  });
+
+  socket.on('disconnect', () => {
+    const playerIndex = players.indexOf(socket.id);
+    if (playerIndex !== -1) {
+      players.splice(playerIndex, 1);
+    }
+    a = null;
+    b = null;
+    masterSocket = null;
+    slaveSocket = null;
+    aime = 1;
+    bime = 1;
+  });
+
+  socket.on('runduDataRedirect', (data) => {
+    io.emit('runduData', data);
+  });
+
+  socket.on('sledecaRundaKoZnaZna', () => {
+    if (socket.id === masterSocket) {
+      io.to(masterSocket).emit('spremiIgru', true);
+    }
+  });
+
+  socket.on('tacanOdgovorKoZnaZna', () => {
+    if (prvi === 0) {
+      prvi = 10;
+      prviId = socket.id;
+    } else if (prvi === -5) {
+      drugi = 10;
+      drugiId = socket.id;
+    } else if (drugi === 0) {
+      drugi = 0;
+      drugiId = socket.id;
+    } else {
+      console.log('Error loading answers!');
+    }
+  });
+
+  socket.on('netacanOdgovorKoZnaZna', () => {
+    if (prvi === 0) {
+      prvi = -5;
+      prviId = socket.id;
+    } else {
+      drugi = -5;
+      drugiId = socket.id;
+    }
+  });
+
+  socket.on('obradaKoZnaZna', () => {
+    console.log('Processing result: prvi=' + prvi + ' drugi=' + drugi);
+    if (socket.id === masterSocket) {
+      if (prviId === a) {
+        io.emit('obradaBodovaKoZnaZna', prvi, drugi);
+        prvi = 0;
+        drugi = 0;
+      } else {
+        io.emit('obradaBodovaKoZnaZna', drugi, prvi);
+        prvi = 0;
+        drugi = 0;
       }
     }
-  })
-    socket.on('reset', () => {
-	console.log("reset");
-        const playerIndex = players.indexOf(socket.id);
-        if (playerIndex !== -1) {
-            players.splice(playerIndex, 1); // Remove the player from the array
-        }
-        // Reset both players if they are disconnected or game is finished
-        a = null;
-        b = null;
-	aime = 1;
-    	bime = 1;
-    });
-    socket.on('disconnect', () => {
-        console.log("disconnect");
-            const playerIndex = players.indexOf(socket.id);
-            if (playerIndex !== -1) {
-                players.splice(playerIndex, 1); // Remove the player from the array
-            }
-            // Reset both players if they are disconnected
-            a = null;
-            b = null;
-        masterSocket = null;
-        slaveSocket = null;
-        aime = 1;
-            bime = 1;
-        });
+  });
 
-    socket.on('runduDataRedirect', (data) => {
-        io.emit('runduData', data); // Emit JSON string
-    });
-    socket.on('sledecaRundaKoZnaZna', () => {
-        if(socket.id == masterSocket)
-        io.to(masterSocket).emit("spremiIgru", true);
-    });
-    socket.on('tacanOdgovorKoZnaZna', () => {
-        console.log(socket.id + " daje tacan odgovor");
-        if (prvi == 0 ) {
-            prvi = 10;
-            prviId = socket.id;
-        } else if (prvi == -5) {
-            drugi = 10;
-            drugiId = socket.id;
-        } else if (drugi == 0) {
-            drugi = 0;
-            drugiId = socket.id
-        } else {
-            console.log("Greska prilikom ucitavanja odgovora!")
-        }
-    });
-    socket.on('netacanOdgovorKoZnaZna', () => {
-        console.log(socket.id + " daje netacan odgovor");
-        if (prvi == 0 ) {
-            prvi = -5;
-            prviId = socket.id;
-        } else {
-            drugi = -5;
-            drugiId = socket.id;
-        }
-    });
-    socket.on('obradaKoZnaZna', () => {
-        console.log("Obrada rezultat: prvi=" + prvi + " drugi=" + drugi);
-        if (socket.id == masterSocket) {
-            if(prviId == a) {
-                io.emit('obradaBodovaKoZnaZna', prvi, drugi);
-                prvi = 0;
-                drugi = 0;
-            } else {
-                io.emit('obradaBodovaKoZnaZna', drugi, prvi);
-                        prvi = 0;
-                        drugi = 0;
-            }
-        }
-    });
-    socket.on('pocniSpojnice', () => {
-        console.log("pocinjuSpojnice");
-        io.emit('pocetakSpojniceJava');
-    });
+  socket.on('pocniSpojnice', () => {
+    console.log('Start Spojnice');
+    io.emit('pocetakSpojniceJava');
+  });
+
+  socket.on('buttonClicked', (data) => {
+    console.log(data);
+    io.emit('buttonClickedClient', data);
+  });
 });

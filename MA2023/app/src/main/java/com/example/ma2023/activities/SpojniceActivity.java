@@ -58,13 +58,17 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
         Button b4 = findViewById(R.id.button5n9);
         Button b5 = findViewById(R.id.button5n10);
 
-        a1.setEnabled(false);
-        a2.setEnabled(false);
-        a3.setEnabled(false);
-        a4.setEnabled(false);
-        a5.setEnabled(false);
 
+
+        //ovo zatvara igru jednom igracu
         if(userF.getDisplayName().toString() != aName.getText().toString()) {
+
+            a1.setEnabled(false);
+            a2.setEnabled(false);
+            a3.setEnabled(false);
+            a4.setEnabled(false);
+            a5.setEnabled(false);
+
             b1.setEnabled(false);
             b2.setEnabled(false);
             b3.setEnabled(false);
@@ -72,12 +76,12 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
             b5.setEnabled(false);
         }
 
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSocket.emit("potez");
-            }
-        });
+//        b1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mSocket.emit("potez");
+//            }
+//        });
 
         //SLEDECA IGRA dugme
         final Button btn5n11 = findViewById(R.id.button5n11);

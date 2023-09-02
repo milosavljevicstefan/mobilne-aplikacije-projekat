@@ -206,7 +206,7 @@ public class PocetnaStranaActivity extends AppCompatActivity implements Navigati
     public void StartMatch( Object a){
         Log.d("Login", "start match");
 //        mSocket.emit("Imena");
-        Intent intent = new Intent(getApplicationContext(), SpojniceActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AsocijacijeActivity.class);
         intent.putExtra("aName", aName);
         intent.putExtra("bName", bName);
         intent.putExtra("aScore", "0");
