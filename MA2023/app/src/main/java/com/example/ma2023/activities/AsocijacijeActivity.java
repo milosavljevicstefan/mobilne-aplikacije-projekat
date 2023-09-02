@@ -13,25 +13,38 @@ import android.widget.TextView;
 import com.example.ma2023.Konekcija;
 import com.example.ma2023.R;
 import com.example.ma2023.model.Asocijacija;
+import com.example.ma2023.model.Kolona;
+import com.example.ma2023.model.Pitanje;
 import com.example.ma2023.service.AsocijacijaService;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class AsocijacijeActivity extends AppCompatActivity implements AsocijacijaService.OnAsocijacijeLoadedListener {
+
+    private Button a1Button, a2Button, a3Button, a4Button;
+    private Button b1Button, b2Button, b3Button, b4Button;
+    private Button c1Button, c2Button, c3Button, c4Button;
+    private Button d1Button, d2Button, d3Button, d4Button;
+    private Button aButton, bButton, cButton, dButton, finalWordButton;
     List<Asocijacija> asocijacijeZaIgru;
+    private AtomicInteger runda = new AtomicInteger();
     private Socket mSocket;
 
     private FirebaseAuth auth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Konekcija app = (Konekcija) AsocijacijeActivity.this.getApplication();
@@ -49,128 +62,28 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
         aScore.setText(intent.getStringExtra("aScore"));
         bScore.setText(intent.getStringExtra("bScore"));
 
-        //idemo
-        Button b1Button = findViewById(R.id.button6nB1);
-        Button b2Button = findViewById(R.id.button6nB2);
-        Button b3Button = findViewById(R.id.button6nB3);
-        Button b4Button = findViewById(R.id.button6nB4);
-        Button finalWordButton = findViewById(R.id.button6nKonacno);
-        Button aButton = findViewById(R.id.button6nA);
-        Button bButton = findViewById(R.id.button6nB);
-        Button cButton = findViewById(R.id.button6nC);
-        Button c4Button = findViewById(R.id.button6nC4);
-        Button c3Button = findViewById(R.id.button6nC3);
-        Button c2Button = findViewById(R.id.button6nC2);
-        Button c1Button = findViewById(R.id.button6nC1);
-        Button dButton = findViewById(R.id.button6nD);
-        Button d4Button = findViewById(R.id.button6nD4);
-        Button d3Button = findViewById(R.id.button6nD3);
-        Button d2Button = findViewById(R.id.button6nD2);
-        Button d1Button = findViewById(R.id.button6nD1);
-        Button a1Button = findViewById(R.id.button6nA1);
-        Button a2Button = findViewById(R.id.button6nA2);
-        Button a3Button = findViewById(R.id.button6nA3);
-        Button a4Button = findViewById(R.id.button6nA4);
-// ...
 
-
-
-        View.OnClickListener buttonClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                switch (v.getId()) {
-                    case R.id.button6nA1:
-                        displayAndDisableButton(a1Button, asocijacijeZaIgru.get(0).getKolone().get(0).getPolja().get(0));
-                        break;
-
-                    case R.id.button6nA2:
-                        displayAndDisableButton(a2Button, asocijacijeZaIgru.get(0).getKolone().get(0).getPolja().get(1));
-                        break;
-
-                    case R.id.button6nA3:
-                        displayAndDisableButton(a3Button, asocijacijeZaIgru.get(0).getKolone().get(0).getPolja().get(2));
-                        break;
-
-                    case R.id.button6nA4:
-                        displayAndDisableButton(a4Button, asocijacijeZaIgru.get(0).getKolone().get(0).getPolja().get(3));
-                        break;
-
-                    case R.id.button6nB1:
-                        displayAndDisableButton(b1Button, asocijacijeZaIgru.get(0).getKolone().get(1).getPolja().get(0));
-                        break;
-
-                    case R.id.button6nB2:
-                        displayAndDisableButton(b2Button, asocijacijeZaIgru.get(0).getKolone().get(1).getPolja().get(1));
-                        break;
-
-                    case R.id.button6nB3:
-                        displayAndDisableButton(b3Button, asocijacijeZaIgru.get(0).getKolone().get(1).getPolja().get(2));
-                        break;
-
-                    case R.id.button6nB4:
-                        displayAndDisableButton(b4Button, asocijacijeZaIgru.get(0).getKolone().get(1).getPolja().get(3));
-                        break;
-                        
-                    case R.id.button6nC1:
-                        displayAndDisableButton(c1Button, asocijacijeZaIgru.get(0).getKolone().get(2).getPolja().get(0));
-                        break;
-
-                    case R.id.button6nC2:
-                        displayAndDisableButton(c2Button, asocijacijeZaIgru.get(0).getKolone().get(2).getPolja().get(1));
-                        break;
-
-                    case R.id.button6nC3:
-                        displayAndDisableButton(c3Button, asocijacijeZaIgru.get(0).getKolone().get(2).getPolja().get(2));
-                        break;
-
-                    case R.id.button6nC4:
-                        displayAndDisableButton(c4Button, asocijacijeZaIgru.get(0).getKolone().get(2).getPolja().get(3));
-                        break;
-
-                    case R.id.button6nD1:
-                        displayAndDisableButton(d1Button, asocijacijeZaIgru.get(0).getKolone().get(3).getPolja().get(0));
-                        break;
-
-                    case R.id.button6nD2:
-                        displayAndDisableButton(d2Button, asocijacijeZaIgru.get(0).getKolone().get(3).getPolja().get(1));
-                        break;
-
-                    case R.id.button6nD3:
-                        displayAndDisableButton(d3Button, asocijacijeZaIgru.get(0).getKolone().get(3).getPolja().get(2));
-                        break;
-
-                    case R.id.button6nD4:
-                        displayAndDisableButton(d4Button, asocijacijeZaIgru.get(0).getKolone().get(3).getPolja().get(3));
-                        break;
-                    case R.id.button6nKonacno:
-                        // Handle the click on the final word button here
-                        break;
-                }
-            }
-        };
-
-        b1Button.setOnClickListener(buttonClickListener);
-        b2Button.setOnClickListener(buttonClickListener);
-        b3Button.setOnClickListener(buttonClickListener);
-        b4Button.setOnClickListener(buttonClickListener);
-        finalWordButton.setOnClickListener(buttonClickListener);
-        aButton.setOnClickListener(buttonClickListener);
-        bButton.setOnClickListener(buttonClickListener);
-        cButton.setOnClickListener(buttonClickListener);
-        c4Button.setOnClickListener(buttonClickListener);
-        c3Button.setOnClickListener(buttonClickListener);
-        c2Button.setOnClickListener(buttonClickListener);
-        c1Button.setOnClickListener(buttonClickListener);
-        dButton.setOnClickListener(buttonClickListener);
-        d4Button.setOnClickListener(buttonClickListener);
-        d3Button.setOnClickListener(buttonClickListener);
-        d2Button.setOnClickListener(buttonClickListener);
-        d1Button.setOnClickListener(buttonClickListener);
-        a1Button.setOnClickListener(buttonClickListener);
-        a2Button.setOnClickListener(buttonClickListener);
-        a3Button.setOnClickListener(buttonClickListener);
-        a4Button.setOnClickListener(buttonClickListener);
+        b1Button = findViewById(R.id.button6nB1);
+        b2Button = findViewById(R.id.button6nB2);
+        b3Button = findViewById(R.id.button6nB3);
+        b4Button = findViewById(R.id.button6nB4);
+        finalWordButton = findViewById(R.id.button6nKonacno);
+        aButton = findViewById(R.id.button6nA);
+        bButton = findViewById(R.id.button6nB);
+        cButton = findViewById(R.id.button6nC);
+        c4Button = findViewById(R.id.button6nC4);
+        c3Button = findViewById(R.id.button6nC3);
+        c2Button = findViewById(R.id.button6nC2);
+        c1Button = findViewById(R.id.button6nC1);
+        dButton = findViewById(R.id.button6nD);
+        d4Button = findViewById(R.id.button6nD4);
+        d3Button = findViewById(R.id.button6nD3);
+        d2Button = findViewById(R.id.button6nD2);
+        d1Button = findViewById(R.id.button6nD1);
+        a1Button = findViewById(R.id.button6nA1);
+        a2Button = findViewById(R.id.button6nA2);
+        a3Button = findViewById(R.id.button6nA3);
+        a4Button = findViewById(R.id.button6nA4);
         a1Button.setTag(false);
         a2Button.setTag(false);
         a3Button.setTag(false);
@@ -192,6 +105,41 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
         cButton.setTag(false);
         dButton.setTag(false);
         finalWordButton.setTag(false);
+
+
+        mSocket.on("spremiIgru", (a) -> {
+            Log.d("asocijacije", "Usao u spremiIgru" + Integer.valueOf(String.valueOf(runda)));
+            if (Integer.valueOf(String.valueOf(runda)) < 3) {
+                if (asocijacijeZaIgru != null && !asocijacijeZaIgru.isEmpty()) {
+                    Asocijacija asocijacija = asocijacijeZaIgru.get(runda.getAndIncrement());
+                    JSONObject runduData = prepareRunduData(asocijacija);
+                    this.mSocket.emit("runduDataRedirect", runduData.toString()); // Emit to all sockets
+                }
+            }
+            else if (Integer.valueOf(String.valueOf(runda)) == 3) {
+                    Log.d("asocijacije", "kraj");
+//                intent.putExtra("aName", aName.getText());
+//                intent.putExtra("bName", bName.getText());
+//                intent.putExtra("aScore", aScore.getText());
+//                intent.putExtra("bScore", bScore.getText());
+//                this.mSocket.emit("pocniSpojnice");
+            }
+        });
+
+        mSocket.on("runduData", (data) -> {
+            Log.d("asocijacije", "usao u runduData");
+            Log.d("asocijacije", "Received data: " + data[0].toString());
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true );
+                Asocijacija asocijacija = mapper.readValue(data[0].toString(), Asocijacija.class);
+                Log.d("asocijacije", "Received data: " + asocijacija.toString());
+                spremiRundu(asocijacija);
+            } catch (IOException e) {
+                Log.d("asocijacije", "Exception while parsing JSON");
+                e.printStackTrace();
+            }
+        });
 
 
         mSocket.on("buttonClickedClient", new Emitter.Listener() {
@@ -265,6 +213,153 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
 
     }
 
+    private void spremiRundu(Asocijacija asocijacija) {
+
+        b1Button = findViewById(R.id.button6nB1);
+        b2Button = findViewById(R.id.button6nB2);
+        b3Button = findViewById(R.id.button6nB3);
+        b4Button = findViewById(R.id.button6nB4);
+        finalWordButton = findViewById(R.id.button6nKonacno);
+        aButton = findViewById(R.id.button6nA);
+        bButton = findViewById(R.id.button6nB);
+        cButton = findViewById(R.id.button6nC);
+        c4Button = findViewById(R.id.button6nC4);
+        c3Button = findViewById(R.id.button6nC3);
+        c2Button = findViewById(R.id.button6nC2);
+        c1Button = findViewById(R.id.button6nC1);
+        dButton = findViewById(R.id.button6nD);
+        d4Button = findViewById(R.id.button6nD4);
+        d3Button = findViewById(R.id.button6nD3);
+        d2Button = findViewById(R.id.button6nD2);
+        d1Button = findViewById(R.id.button6nD1);
+        a1Button = findViewById(R.id.button6nA1);
+        a2Button = findViewById(R.id.button6nA2);
+        a3Button = findViewById(R.id.button6nA3);
+        a4Button = findViewById(R.id.button6nA4);
+        View.OnClickListener buttonClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch (v.getId()) {
+                    case R.id.button6nA1:
+                        displayAndDisableButton(a1Button, asocijacija.getKolone().get(0).getPolja().get(0));
+                        break;
+
+                    case R.id.button6nA2:
+                        displayAndDisableButton(a2Button, asocijacija.getKolone().get(0).getPolja().get(1));
+                        break;
+
+                    case R.id.button6nA3:
+                        displayAndDisableButton(a3Button, asocijacija.getKolone().get(0).getPolja().get(2));
+                        break;
+
+                    case R.id.button6nA4:
+                        displayAndDisableButton(a4Button, asocijacija.getKolone().get(0).getPolja().get(3));
+                        break;
+
+                    case R.id.button6nB1:
+                        displayAndDisableButton(b1Button, asocijacija.getKolone().get(1).getPolja().get(0));
+                        break;
+
+                    case R.id.button6nB2:
+                        displayAndDisableButton(b2Button, asocijacija.getKolone().get(1).getPolja().get(1));
+                        break;
+
+                    case R.id.button6nB3:
+                        displayAndDisableButton(b3Button, asocijacija.getKolone().get(1).getPolja().get(2));
+                        break;
+
+                    case R.id.button6nB4:
+                        displayAndDisableButton(b4Button, asocijacija.getKolone().get(1).getPolja().get(3));
+                        break;
+
+                    case R.id.button6nC1:
+                        displayAndDisableButton(c1Button, asocijacija.getKolone().get(2).getPolja().get(0));
+                        break;
+
+                    case R.id.button6nC2:
+                        displayAndDisableButton(c2Button, asocijacija.getKolone().get(2).getPolja().get(1));
+                        break;
+
+                    case R.id.button6nC3:
+                        displayAndDisableButton(c3Button, asocijacija.getKolone().get(2).getPolja().get(2));
+                        break;
+
+                    case R.id.button6nC4:
+                        displayAndDisableButton(c4Button, asocijacija.getKolone().get(2).getPolja().get(3));
+                        break;
+
+                    case R.id.button6nD1:
+                        displayAndDisableButton(d1Button, asocijacija.getKolone().get(3).getPolja().get(0));
+                        break;
+
+                    case R.id.button6nD2:
+                        displayAndDisableButton(d2Button, asocijacija.getKolone().get(3).getPolja().get(1));
+                        break;
+
+                    case R.id.button6nD3:
+                        displayAndDisableButton(d3Button, asocijacija.getKolone().get(3).getPolja().get(2));
+                        break;
+
+                    case R.id.button6nD4:
+                        displayAndDisableButton(d4Button, asocijacija.getKolone().get(3).getPolja().get(3));
+                        break;
+                    case R.id.button6nKonacno:
+                        // Handle the click on the final word button here
+                        break;
+                }
+            }
+        };
+
+        b1Button.setOnClickListener(buttonClickListener);
+        b2Button.setOnClickListener(buttonClickListener);
+        b3Button.setOnClickListener(buttonClickListener);
+        b4Button.setOnClickListener(buttonClickListener);
+        finalWordButton.setOnClickListener(buttonClickListener);
+        aButton.setOnClickListener(buttonClickListener);
+        bButton.setOnClickListener(buttonClickListener);
+        cButton.setOnClickListener(buttonClickListener);
+        c4Button.setOnClickListener(buttonClickListener);
+        c3Button.setOnClickListener(buttonClickListener);
+        c2Button.setOnClickListener(buttonClickListener);
+        c1Button.setOnClickListener(buttonClickListener);
+        dButton.setOnClickListener(buttonClickListener);
+        d4Button.setOnClickListener(buttonClickListener);
+        d3Button.setOnClickListener(buttonClickListener);
+        d2Button.setOnClickListener(buttonClickListener);
+        d1Button.setOnClickListener(buttonClickListener);
+        a1Button.setOnClickListener(buttonClickListener);
+        a2Button.setOnClickListener(buttonClickListener);
+        a3Button.setOnClickListener(buttonClickListener);
+        a4Button.setOnClickListener(buttonClickListener);
+
+    }
+
+    private JSONObject prepareRunduData(Asocijacija asocijacija) {
+        JSONObject data = new JSONObject();
+        try {
+            JSONArray koloneArray = new JSONArray();
+
+            // Iterate through the Kolona objects in the Asocijacija
+            for (Kolona kolona : asocijacija.getKolone()) {
+                JSONObject kolonaObject = new JSONObject();
+                kolonaObject.put("resenjeKolone", kolona.getResenjeKolone());
+
+                // Convert the List of polja in Kolona to a JSONArray
+                JSONArray poljaArray = new JSONArray(kolona.getPolja());
+                kolonaObject.put("polja", poljaArray);
+
+                koloneArray.put(kolonaObject);
+            }
+
+            // Add the koloneArray and konacnoResenje to the data object
+            data.put("kolone", koloneArray);
+            data.put("konacnoResenje", asocijacija.getKonacnoResenje());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 
 
 
@@ -295,5 +390,6 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
     public void onAsocijacijeLoaded(List<Asocijacija> asocijacije) {
         asocijacijeZaIgru = asocijacije;
         Log.d("asocijacije", "Pitanja ucitana");
+        mSocket.emit("pitanjaReady");
     }
 }

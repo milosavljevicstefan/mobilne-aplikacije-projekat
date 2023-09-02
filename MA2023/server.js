@@ -70,7 +70,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('pitanjaReady', (socketId) => {
-    if (socketId === masterSocket) {
+    console.log(socket.id + "master" + masterSocket);
+    if (socket.id === masterSocket) {
       io.to(masterSocket).emit('spremiIgru', true);
     }
   });
