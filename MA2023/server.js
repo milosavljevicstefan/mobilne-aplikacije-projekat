@@ -205,4 +205,10 @@ io.on('connection', (socket) => {
     console.log(data);
     io.emit('buttonClickedClient', data);
   });
+
+  socket.on('tacanOdgovorAsocijacije', (bodovi) => {
+    console.log("a: " + a + ", b: " + b + ", bodovi: " + bodovi);
+    let playerIndex = a == socket.id ? 0 : 1;
+    io.emit("respondOdgovorAsocijacije", { bodovi, playerIndex });
+  });
 });
