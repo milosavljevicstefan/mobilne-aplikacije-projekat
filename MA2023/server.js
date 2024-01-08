@@ -1,5 +1,5 @@
 let a,b;
-let masterSocket, slaveSocket;
+var masterSocket, slaveSocket;
 let aime = 1,bime = 1;
 const players = []; // An array to keep track of connected players
 let prvi = 0, drugi = 0;
@@ -10,25 +10,32 @@ const http = require('http');
 const socket = require('socket.io');
 const server = http.createServer(app);
 const io = socket(server);
+let prviIgracSpojnice = false;
 
-
-server.listen(2411,'192.168.1.5', () => {
-  console.log('listening on 192.168.1.5:2411');
+server.listen(2411,'192.168.1.87', () => {
+  console.log('listening on 192.168.1.87:2411');
 });
 
 
 io.on('connection', (socket) => {
+
     console.log("New socket connection: " + socket.id);
     if(a == null )
     {
         a = socket.id;
-	slaveSocket = a;
+
+	    slaveSocket = a;
+
         io.to(socket.id).emit("pleyer1",true);
+        console.log("slaveSocket: " + socket.id);
+
     }
     else{  
       if(b == null){
         b = socket.id;
-	masterSocket = b;
+
+	    masterSocket = b;
+
         io.to(socket.id).emit("pleyer2",true);
        
       }
@@ -39,7 +46,7 @@ socket.on('pitanjaReady', (socketId) => {
             io.to(masterSocket).emit("spremiIgru", true);
         }
     });
-     socket.on('register', async () => {
+ socket.on('register', async () => {
         players.push(socket.id); // Register the player's socket ID
         if (players.length === 2) {
             io.emit("startMatch", true);
@@ -50,18 +57,18 @@ socket.on('pitanjaReady', (socketId) => {
     });
     
   
-    socket.on('Imena', () => {
+socket.on('Imena', () => {
       const person = {a:aime, b:bime};
       io.emit("podaci",JSON.stringify(person)); 
      
   });
-   socket.on('turn', async () => {
+socket.on('turn', async () => {
         const otherPlayer = players.find(player => player !== socket.id);
         if (otherPlayer) {
             io.to(otherPlayer).emit("changeturn");
         }
     });
-    socket.on('turna', async () => {
+socket.on('turna', async () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
         if (socket.id == a) {
             io.to(b).emit("changeturna");
@@ -72,7 +79,7 @@ socket.on('pitanjaReady', (socketId) => {
 
 
     });
-    socket.on('points', (ab) => {
+socket.on('points', (ab) => {
 
         if(socket.id == a)
         {
@@ -100,7 +107,7 @@ socket.on('pitanjaReady', (socketId) => {
 
 
     // })
-    socket.on('Ime', (ime) => {
+socket.on('Ime', (ime) => {
        
       if(aime == 1)
     {
@@ -112,7 +119,7 @@ socket.on('pitanjaReady', (socketId) => {
       }
     }
   })
-    socket.on('reset', () => {
+socket.on('reset', () => {
 	console.log("reset");
         const playerIndex = players.indexOf(socket.id);
         if (playerIndex !== -1) {
@@ -124,7 +131,7 @@ socket.on('pitanjaReady', (socketId) => {
 	aime = 1;
     	bime = 1;
     });
-    socket.on('disconnect', () => {
+socket.on('disconnect', () => {
         console.log("disconnect");
             const playerIndex = players.indexOf(socket.id);
             if (playerIndex !== -1) {
@@ -139,14 +146,16 @@ socket.on('pitanjaReady', (socketId) => {
             bime = 1;
         });
 
-    socket.on('runduDataRedirect', (data) => {
-        io.emit('runduData', data); // Emit JSON string
-    });
-    socket.on('sledecaRundaKoZnaZna', () => {
+
+
+
+
+
+socket.on('sledecaRundaKoZnaZna', () => {
         if(socket.id == masterSocket)
         io.to(masterSocket).emit("spremiIgru", true);
     });
-    socket.on('tacanOdgovorKoZnaZna', () => {
+socket.on('tacanOdgovorKoZnaZna', () => {
         console.log(socket.id + " daje tacan odgovor");
         if (prvi == 0 ) {
             prvi = 10;
@@ -161,7 +170,7 @@ socket.on('pitanjaReady', (socketId) => {
             console.log("Greska prilikom ucitavanja odgovora!")
         }
     });
-    socket.on('netacanOdgovorKoZnaZna', () => {
+socket.on('netacanOdgovorKoZnaZna', () => {
         console.log(socket.id + " daje netacan odgovor");
         if (prvi == 0 ) {
             prvi = -5;
@@ -171,7 +180,7 @@ socket.on('pitanjaReady', (socketId) => {
             drugiId = socket.id;
         }
     });
-    socket.on('obradaKoZnaZna', () => {
+socket.on('obradaKoZnaZna', () => {
         console.log("Obrada rezultat: prvi=" + prvi + " drugi=" + drugi);
         if (socket.id == masterSocket) {
             if(prviId == a) {
@@ -185,8 +194,19 @@ socket.on('pitanjaReady', (socketId) => {
             }
         }
     });
-    socket.on('pocniSpojnice', () => {
-        console.log("pocinjuSpojnice");
-        io.emit('pocetakSpojniceJava');
-    });
+
+
+
+socket.on('spremiIgruSA', () => {
+    console.log("Spojnice igra");
+    io.emit('spremiIgru'); // Change this line to emit to all connected sockets
 });
+
+socket.on('runduDataRedirect', (data) => {
+    io.emit('runduData', data); // Change this line to emit to all connected sockets
+});
+
+socket.on('prvaRundaSpojnice', () => {
+    io.to(masterSocket).emit('onemoguciDugmad');
+});
+})
