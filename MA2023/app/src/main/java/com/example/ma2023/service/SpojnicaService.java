@@ -17,6 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.example.ma2023.model.Spojnica;
+
+
 public class SpojnicaService {
     private List<Spojnica> spojnice = new ArrayList<>();
     private OnSpojniceLoadedListener listener;
@@ -29,6 +32,8 @@ public class SpojnicaService {
         this.listener = listener;
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
+        // ...
+
         firestore.collection("spojnice").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -37,18 +42,38 @@ public class SpojnicaService {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("SpojniceService", document.toString());
                                 String pitanjeText = document.getString("tekstPitanja");
-                                List<Map<String, String>> paroviData = (List<Map<String, String>>) document.get("parovi");
+                                Log.d("SpojniceService", "Pitanje Text: " + pitanjeText);
+
+                                // Change the type of paroviData from String to Object
+                                List<Map<String, Object>> paroviData = (List<Map<String, Object>>) document.get("parovi");
+                                Log.d("SpojniceService", "Parovi Data: " + paroviData);
 
                                 List<Par> parovi = new ArrayList<>();
-                                for (Map<String, String> parData : paroviData) {
-                                    String key = parData.get("key");
-                                    String value = parData.get("value");
-                                    Par par = new Par(key, value);
+                                Log.d("SpojniceService", "Initialized parovi list");
+
+                                for (Map<String, Object> parData : paroviData) {
+                                    Log.d("SpojniceService", "Processing parData: " + parData);
+
+                                    // Change the type of key and value from String to Object
+                                    Object key = parData.get("key");
+                                    Object value = parData.get("value");
+
+                                    Log.d("SpojniceService", "Key: " + key + ", Value: " + value);
+
+                                    // Convert key and value to String if needed
+                                    String keyString = key.toString();
+                                    String valueString = value.toString();
+
+                                    Log.d("SpojniceService", "Converted Key to String: " + keyString + ", Converted Value to String: " + valueString);
+
+                                    Par par = new Par(keyString, valueString);
                                     parovi.add(par);
+                                    Log.d("SpojniceService", "Par added to parovi list: " + par);
                                 }
 
                                 Spojnica spojnica = new Spojnica(pitanjeText, parovi);
                                 spojnice.add(spojnica);
+                                Log.d("SpojniceService", "Spojnica added: " + spojnica);
                             }
                             if (listener != null) {
                                 listener.onSpojniceLoaded(getTwoRandomSpojnice());
@@ -58,9 +83,10 @@ public class SpojnicaService {
                         }
                     }
                 });
+
     }
 
-    public List<Spojnica> getTwoRandomSpojnice() {
+        public List<Spojnica> getTwoRandomSpojnice() {
         List<Spojnica> randomSpojnice = new ArrayList<>(spojnice);
         Collections.shuffle(randomSpojnice);
 

@@ -22,11 +22,11 @@ public class Spojnica {
         this.tekstPitanja = tekstPitanja;
     }
 
-    public void setParovi(List<Par> parovi) {
-        this.parovi = parovi;
-    }
-
     public List<Par> getParovi() {
         return parovi;
+    }
+
+    public void setParovi(List<Par> parovi) {
+        this.parovi = parovi;
     }
 }
