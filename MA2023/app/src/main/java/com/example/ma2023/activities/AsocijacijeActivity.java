@@ -125,7 +125,7 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
 
         mSocket.on("spremiIgru", (a) -> {
             Log.d("asocijacije", "Usao u spremiIgru" + Integer.valueOf(String.valueOf(runda)));
-            if (Integer.valueOf(String.valueOf(runda)) < 3) {
+            if (Integer.valueOf(String.valueOf(runda)) < 2) {
                 if (asocijacijeZaIgru != null && !asocijacijeZaIgru.isEmpty()) {
                     Asocijacija asocijacija = asocijacijeZaIgru.get(runda.getAndIncrement());
                     JSONObject runduData = prepareRunduData(asocijacija);
@@ -255,7 +255,6 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
                                         Log.d("asocijacije", "Greska u bScoru!" + bScore.getText());
                                     }
                                 }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -534,7 +533,6 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
 
                     if (userGuess.equalsIgnoreCase(correctAnswer)) {
                         Log.d("asocijacije", "pogodak");
-                        displayGuessedClues(correctAnswer);
                         if (button.getId() == R.id.button6nKonacno) {
                             JSONObject finalWordData = new JSONObject();
                             try {
@@ -544,6 +542,8 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
                             }
                             mSocket.emit("sledecaRundaKoZnaZna", finalWordData);
                         }
+//                        displayGuessedClues(correctAnswer);
+
                         changeTurn();
                     } else {
                         Log.d("asocijacije", "odgodak");
@@ -622,17 +622,18 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
 
                 if (userGuess.equalsIgnoreCase(correctAnswer)) {
                     Log.d("asocijacije", "pogodak");
-                    displayGuessedClues(correctAnswer);
                     if (button.getId() == R.id.button6nKonacno) {
+                        Log.d("asocijacije", "konacno resenje jeste!");
                         JSONObject finalWordData = new JSONObject();
                         try {
                             finalWordData.put("correctAnswer", correctAnswer);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        mSocket.emit("sledecaRundaKoZnaZna", finalWordData);
+                        mSocket.emit("sledecaRundaKoZnaZna");
                     }
-                    changeTurn();
+//                    displayGuessedClues(correctAnswer);
+//                    changeTurn();
                 } else {
                     Log.d("asocijacije", "odgodak");
                     changeTurn();
