@@ -6,36 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".activities.KorakPoKorakActivity">
 
-    <EditText
-        android:id="@+id/editTextAScore"
-        android:layout_width="61dp"
-        android:layout_height="39dp"
-        android:clickable="false"
-        android:drawableTint="#FFFFFF"
-        android:ems="10"
-        android:foreground="@color/design_default_color_primary_variant"
-        android:hint="11"
-        android:inputType="number"
-        android:textColor="#FFFFFF"
+    <TextView
+        android:id="@+id/timerTextView3"
+        android:layout_width="115dp"
+        android:layout_height="60dp"
+        android:layout_weight="1"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintVertical_bias="0.011" />
 
 
     <EditText
-        android:id="@+id/editTextBScore"
+        android:id="@+id/editTextBScore3"
         android:layout_width="61dp"
-        android:layout_height="39dp"
+        android:layout_height="48dp"
         android:clickable="false"
         android:drawableTint="#FFFFFF"
         android:ems="10"
         android:foreground="@android:color/holo_red_dark"
         android:hint="11"
         android:inputType="number"
+        android:text="aaa"
         android:textColor="#FFFFFF"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.896"
@@ -43,17 +43,77 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="98dp"
-        android:layout_height="25dp"
-        android:text="Ukupno poena"
+    <EditText
+        android:id="@+id/editTextAScore3"
+        android:layout_width="61dp"
+        android:layout_height="48dp"
+        android:clickable="false"
+        android:drawableTint="#FFFFFF"
+        android:ems="10"
+        android:foreground="@color/design_default_color_primary_variant"
+        android:hint="11"
+        android:inputType="number"
+        android:text="0"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.023" />
+
+    <TextView
+        android:id="@+id/textViewAName3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.898"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.088" />
+
+    <TextView
+        android:id="@+id/textViewBName3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.087" />
+
+    <TextView
+        android:id="@+id/editTextBName23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04" />
+
+    <TextView
+        android:id="@+id/editTextBName53"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.889"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04" />
+
+
 
 
     <ProgressBar
@@ -70,11 +130,10 @@
         app:layout_constraintVertical_bias="0.078" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/korak1"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,11 +143,10 @@
         app:layout_constraintVertical_bias="0.126" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/korak2"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,11 +156,10 @@
         app:layout_constraintVertical_bias="0.188" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/korak3"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,11 +169,10 @@
         app:layout_constraintVertical_bias="0.251" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/korak4"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,11 +183,10 @@
 
 
     <TextView
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/korak5"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -141,12 +196,11 @@
         app:layout_constraintVertical_bias="0.376" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName6"
+        android:id="@+id/korak6"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Tekst 6"
+        android:text="Tekstfdsfsdfsd 6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -155,11 +209,10 @@
         app:layout_constraintVertical_bias="0.438" />
 
     <TextView
-        android:id="@+id/editTextTextPersonName7"
+        android:id="@+id/korak7"
         android:layout_width="411dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:text="Tekst 7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

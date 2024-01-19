@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
@@ -84,6 +85,11 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
     private Button trenutnoKliknutoDugmeA;
     private List<Button> pokusajiA = new ArrayList<>();
 
+    private String trenutniIgrac;
+    private TextView timerTextView;
+    private CountDownTimer countDownTimer;
+    private int bodoviA = 0;
+    private int bodoviB = 0;
 
 
     @Override
@@ -97,8 +103,8 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
         FirebaseUser userF = auth.getCurrentUser();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spojnice);
-        Intent intent = getIntent();
 
+        Intent intent = getIntent();
 
         TextView aName = findViewById(R.id.textViewAName);
         TextView bName = findViewById(R.id.textViewBName);
@@ -202,16 +208,89 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                 runOnUiThread(() -> {
                     Toast.makeText(SpojniceActivity.this, "Prva runda", Toast.LENGTH_SHORT).show();
                     potezA();
+                    trenutniIgrac = "prvi";
+                    mSocket.emit("tajmer", "spojnice");
 
                 });
             } else if ("drugi".equals(poruka)) {
                 runOnUiThread(() -> {
                     Toast.makeText(SpojniceActivity.this, "Prva runda - drugi", Toast.LENGTH_SHORT).show();
-                    onemoguciSvuDugmad();
+//                    onemoguciSvuDugmad();
+                    potezA();
+                    trenutniIgrac = "drugi";
+                    mSocket.emit("tajmer", "spojnice");
+
                 });
             }
         });
 
+
+//        mSocket.on("drugaRunda", (data) -> {
+//            String poruka = data[0].toString();
+//            if ("prvi".equals(poruka)) {
+//                runOnUiThread(() -> {
+//                    Toast.makeText(SpojniceActivity.this, "Druga runda", Toast.LENGTH_SHORT).show();
+//                    onemoguciSvuDugmad();
+//                });
+//            } else if ("drugi".equals(poruka)) {
+//                runOnUiThread(() -> {
+//                    Toast.makeText(SpojniceActivity.this, "Druga runda - drugi", Toast.LENGTH_SHORT).show();
+//                    enableUnsolvedButtonsA();
+////                    potezB();
+//                });
+//            }
+//        });
+
+        mSocket.on("prikazBodovaA", (data) -> {
+            runOnUiThread(() -> {
+                bodoviA += 2;
+                TextView editTextBName5 = findViewById(R.id.editTextBName5);
+                int currentBodovi = Integer.parseInt(editTextBName5.getText().toString());
+                int updatedBodovi = currentBodovi + 2;
+                editTextBName5.setText(String.valueOf(updatedBodovi));
+
+            });
+        });
+
+        mSocket.on("prikazBodovaB", (bodovi) -> {
+            runOnUiThread(() -> {
+                bodoviB += 2;
+                TextView editTextBName2 = findViewById(R.id.editTextBName2);
+                int currentBodovi = Integer.parseInt(editTextBName2.getText().toString());
+                int updatedBodovi = currentBodovi + 2;
+                editTextBName2.setText(String.valueOf(updatedBodovi));
+            });
+        });
+
+        timerTextView = findViewById(R.id.timerTextView);
+
+        // Postavi početno vreme na 30 sekundi
+//        int initialTimeInSeconds = 30;
+        int initialTimeInSeconds = 5;
+        updateTimer(initialTimeInSeconds);
+
+        mSocket.on("zapocniTajmer", (data) -> {
+            runOnUiThread(() -> {
+//                TextView timerTextView = findViewById(R.id.timerTextView);
+//                int  = Integer.parseInt(timerTextView.getText().toString());
+//                int updatedTime = ;
+//                timerTextView.setText(String.valueOf(updatedTime));
+                startTimer(initialTimeInSeconds);
+
+            });
+        });
+
+        mSocket.on("sledecaIgra", (data) -> {
+            runOnUiThread(() -> {
+                Intent intentKorakPoKorak = new Intent(SpojniceActivity.this, KorakPoKorakActivity.class);
+                intentKorakPoKorak.putExtra("aName", aName.getText());
+                intentKorakPoKorak.putExtra("bName", bName.getText());
+                intentKorakPoKorak.putExtra("aScore", aScore.getText());
+                intentKorakPoKorak.putExtra("bScore", bScore.getText());
+                startActivity(intentKorakPoKorak);
+
+            });
+        });
 
      }
 
@@ -224,10 +303,10 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
 
                 int randomIndex = new Random().nextInt(spojniceZaIgru.size());
                 Spojnica randomSpojnica = spojniceZaIgru.get(randomIndex);
-//                Log.d("spojnice", "Log 2: Received data: " + randomSpojnica.toString());
+                Log.d("spojnice", "Log 2: Received data: " + randomSpojnica.toString());
 
                 TextView pitanjeTextView = findViewById(R.id.textView17);
-//                Log.d("spojnice", "Log 3: Received data: " + randomSpojnica.getTekstPitanja());
+                Log.d("spojnice", "Log 3: Received data: " + randomSpojnica.getTekstPitanja());
 
                 //POSTAVLJANEJ PITANJA
 //                pitanjeTextView.setText(randomSpojnica.getTekstPitanja());
@@ -235,15 +314,15 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
 //            if (spojniceZaIgru != null && !spojniceZaIgru.isEmpty()) {
 
 //                Spojnica spojnica = spojniceZaIgru.get(1);
-//                Log.d("spojnice", "Log 4: Received data: " + randomSpojnica.toString());
-//                Log.d("spojnice", "Log AAAA: Received data: " + randomSpojnica.getParovi());
-//                Log.d("PREPREPARE RUNDU", "AAAA: " + randomSpojnica);
+                Log.d("spojnice", "Log 4: Received data: " + randomSpojnica.toString());
+                Log.d("spojnice", "Log AAAA: Received data: " + randomSpojnica.getParovi());
+                Log.d("PREPREPARE RUNDU", "AAAA: " + randomSpojnica);
 
                 data = prepareRunduData(randomSpojnica);
-//                Log.d("spojnice", "Log 7: Received data: " + data.toString());
-//                Log.d("POSLEPREPARE RUNDU", "BBBB: " + data);
+                Log.d("spojnice", "Log 7: Received data: " + data.toString());
+                Log.d("POSLEPREPARE RUNDU", "BBBB: " + data);
 
-                mSocket.emit("spremiIgru", "spojnice", data);
+                mSocket.emit("spremiIgru", "spojnice", data, 1);
             }
         }
     }
@@ -306,7 +385,7 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                     if (i < aButtons.size()) {
                         aButtons.get(i).setText(par.getKey());
                     } else {
-                        Log.e("SpojniceActivity", "Nedovoljno aButtons za spojnicu.");
+//                        Log.e("SpojniceActivity", "Nedovoljno aButtons za spojnicu.");
                     }
                 }
 
@@ -318,14 +397,14 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                     if (i < bButtons.size()) {
                         bButtons.get(i).setText(par.getValue());
                     } else {
-                        Log.e("SpojniceActivity", "Nedovoljno bButtons za spojnicu.");
+//                        Log.e("SpojniceActivity", "Nedovoljno bButtons za spojnicu.");
                     }
                 }
 
 
 
             } else {
-                Log.e("SpojniceActivity", "Spojnica nema parova.");
+//                Log.e("SpojniceActivity", "Spojnica nema parova.");
             }
         });
     }
@@ -366,25 +445,6 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
        }
     }
 
-//    private void potezA() {
-//        for (Button buttonA : aButtons) {
-//            buttonA.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    onemoguciDugmadA();
-//                    omoguciDugmadB();
-//                    buttonA.setEnabled(true);
-//                    Toast.makeText(SpojniceActivity.this, "Kliknuto na dugme A", Toast.LENGTH_SHORT).show();
-//
-//                    // Provera da li je par već rešen
-//                    if (!isParAlreadySolved(buttonA)) {
-//                        // Postavljanje listenera za dugmad B samo ako par nije već rešen
-//                        potezB(buttonA);
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     private void potezA() {
         for (Button buttonA : aButtons) {
@@ -399,6 +459,14 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                     pokusajiA.add(buttonA); // Dodavanje trenutno kliknutog dugmeta A u listu pokušaja
                     potezB();
                 }
+//                Log.d("SpojniceActivity", "Number of clicked buttons A: " + pokusajiA.size());
+//                Log.d("SpojniceActivity", "Total number of buttons A: " + aButtons.size());
+//                if (pokusajiA.size() == aButtons.size()) {
+//                    // If yes, emit an event for the second round
+//                    Log.d("SpojniceActivity", "All buttons A clicked. Emitting event for the second round.");
+//                    mSocket.emit("spremiIgru", "spojnice", data, 2);
+
+//                }
             });
         }
     }
@@ -414,12 +482,22 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                     onemoguciDugmad(trenutnoKliknutoDugmeA, buttonB);
                     reseniParovi.add(new Pair<>(trenutnoKliknutoDugmeA, buttonB));
                     resetujStanjeDugmadi(reseniParovi, trenutnoKliknutoDugmeA, buttonB);
+                    mSocket.emit("bodovi", "spojnice", 2 , trenutniIgrac);
+
                 } else {
                     promeniBojuDugmeta(trenutnoKliknutoDugmeA, Color.RED);
                     onemoguciDugmad(trenutnoKliknutoDugmeA, buttonB);
 
                     omoguciSvaDugmadAExcept(reseniParovi, trenutnoKliknutoDugmeA);
                     onemoguciSvaDugmadBExcept(reseniParovi, buttonB);
+                }
+                Log.d("SpojniceActivity", "Number of clicked buttons A: " + pokusajiA.size());
+                Log.d("SpojniceActivity", "Total number of buttons A: " + aButtons.size());
+                if (pokusajiA.size() == aButtons.size()) {
+                    // If yes, emit an event for the second round
+                    Log.d("SpojniceActivity", "All buttons A clicked. Emitting event for the second round.");
+//                    mSocket.emit("spremiIgru", "spojnice", data, 2);
+//                    krajIgre();
                 }
             });
         }
@@ -546,6 +624,54 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
             onemoguciSvaDugmadBExcept(reseniParovi, reseniPar.second);
         }
     }
+
+    private boolean proveriSveSpojnice() {
+        return reseniParovi.size() == spojnicaRundaJedan.getParovi().size();
+    }
+
+    private void enableUnsolvedButtonsA() {
+        for (Button buttonA : aButtons) {
+            if (!isButtonPartOfResolvedPairs(buttonA)) {
+                runOnUiThread(() -> buttonA.setEnabled(true));
+            }
+        }
+    }
+
+    private boolean isButtonPartOfResolvedPairs(Button buttonA) {
+        for (Pair<Button, Button> resolvedPair : reseniParovi) {
+            if (resolvedPair.first == buttonA || resolvedPair.second == buttonA) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    private void krajIgre() {
+//            int bodovi = reseniParovi.size() * 2;
+//            mSocket.emit("krajIgre", "spojnice", bodovi, trenutniIgrac);
+//            return;
+//    }
+
+
+    private void startTimer(int seconds) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                updateTimer((int) (millisUntilFinished / 1000));
+            }
+            public void onFinish() {
+                updateTimer(0);
+                mSocket.emit("krajIgre", "spojnice");
+            }
+        }.start();
+    }
+
+    private void updateTimer(int seconds) {
+        timerTextView.setText(String.valueOf(seconds));
+    }
+
 
 }
 

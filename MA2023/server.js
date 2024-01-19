@@ -177,50 +177,149 @@ io.on('connection', (socket) => {
     });*/
 
 
-    socket.on('spremiIgru', (igra, data) => {
+    socket.on('spremiIgru', (igra, data, runda) => {
 //        console.log(`Received spremiIgru event. Igra: ${igra}, Data: ${data}`);
 
         if (igra === "spojnice") {
             obradiSpojnice(data);
-            novaRunda(igra);
-        } else if (igra === 'drugaIgra') {
-            // Handle the 'drugaIgra' case if needed
+            novaRunda(igra, runda);
+        } else if (igra === 'korakPokorak') {
+//            obradiKorakPoKorak(data);
         }
     });
+
+//     socket.on('krajIgre', (igra, bodovi, trenutniIgrac) => {
+//            console.log(`Primljen događaj krajRunde. Igra: ${igra}, Bodovi: ${bodovi}, Trenutni igrač: ${trenutniIgrac}`);
+//            switch (igra) {
+//                case 'spojnice':
+//                    if (trenutniIgrac === 'prvi') {
+//                        slaveSpojnice = bodovi;
+//                        slaveUkupnoBodova += bodovi;
+//                        io.to(slaveSocket).emit('rezultatIgre', bodovi, "prvi");
+//                    } else if (trenutniIgrac === 'drugi') {
+//                        masterSpojnice = bodovi;
+//                        masterUkupnoBodova += bodovi;
+//                        io.to(masterSocket).emit('rezultatIgre', bodovi, "drugi");
+//                    }
+//                    break;
+//                case 'drugaIgra':
+//                    // Logika za završetak runde druge igre
+//                    break;
+//
+//
+//                default:
+//                    console.log(`Nepoznat tip igre: ${igra}`);
+//            }
+//        });
+
+     socket.on('bodovi', (igra, bodovi, trenutniIgrac) => {
+            switch (igra) {
+                case 'spojnice':
+                    if (trenutniIgrac === 'prvi') {
+                        slaveUkupnoBodova += bodovi;
+                        io.emit('prikazBodovaA', 2);
+                    } else if (trenutniIgrac === 'drugi') {
+                        masterUkupnoBodova += bodovi;
+                        io.emit('prikazBodovaB', 2);
+                    }
+                    break;
+                case 'drugaIgra':
+                    // Logika za završetak runde druge igre
+                    break;
+
+
+                default:
+                    console.log(`Nepoznat tip igre: ${igra}`);
+            }
+        });
+
+        socket.on('tajmer', (igra) => {
+            switch (igra) {
+                case 'spojnice':
+                     io.to(slaveSocket).emit('zapocniTajmer', igra);
+                     io.to(masterSocket).emit('zapocniTajmer', igra);
+//                            io.emit('zapocniTajmer', igra);
+                    break;
+                case 'drugaIgra':
+
+                    break;
+                default:
+                    console.log(`Nepoznat tip igre: ${igra}`);
+            }
+        });
+
+     socket.on('krajIgre', (igra) => {
+            switch (igra) {
+                case 'spojnice':
+                        io.emit('sledecaIgra');
+                    break;
+                case 'drugaIgra':
+                    break;
+
+                default:
+                    console.log(`Nepoznat tip igre: ${igra}`);
+            }
+        });
+
 })
 
 
 //common
-let trenutnaRunda = 0;
+let masterUkupnoBodova = 0;
+let slaveUkupnoBodova = 0;
 
-function novaRunda(trenutnaIgra) {
+function novaRunda(trenutnaIgra, runda) {
     if (trenutnaIgra === 'spojnice') {
-        if (trenutnaRunda >= 4) {
+        if (runda === 1) {
             io.to(slaveSocket).emit('prvaRunda', 'prvi');
             io.to(masterSocket).emit('prvaRunda', 'drugi');
-        } else {
-            trenutnaRunda++;
-        }
+//            trenutnaRunda++;
+         } else if (runda === 2) {
+            io.to(slaveSocket).emit('drugaRunda', 'prvi');
+            io.to(masterSocket).emit('drugaRunda', 'drugi');
+         } else if (runda === 3) {
+            // Handle conditions for round 3
+            // You can emit events or perform logic specific to round 3 here
+         } else if (runda === 4) {
+            // Handle conditions for round 4
+            // You can emit events or perform logic specific to round 4 here
+         } else {
+            // Handle other rounds or conditions if needed
+         }
+
 //        io.emit('novaRunda', trenutnaRunda);
-        return trenutnaRunda;
+//        return trenutnaRunda;
     }
 }
 
 
 //spojnice
 let spojniceArray = [];
-
+let slaveSpojnice = 0;
+let masterSpojnice = 0;
 function obradiSpojnice(data) {
 // ??????
     spojniceArray = [];
     spojniceArray.push(data);
-//  console.log(`Received spremiIgru event. Igra: ${igra}, Data: ${data}`);
-//  console.log('Emitting spremiSpojnice event.');
-//  console.log(`spojniceArray[0]: ${JSON.stringify(spojniceArray[0])}`);
-//  console.log(`spojniceArray[1]: ${JSON.stringify(spojniceArray[1])}`);
+  console.log(`Received spremiIgru event.  Data: ${data}`);
+  console.log('Emitting spremiSpojnice event.');
+  console.log(`spojniceArray[0]: ${JSON.stringify(spojniceArray[0])}`);
+  console.log(`spojniceArray[1]: ${JSON.stringify(spojniceArray[1])}`);
     if (spojniceArray.length != 0) {
         //emitujemo istu, prvu iz niza, spojnicu na oba socketa
         io.emit('spremiSpojnice', spojniceArray[0]);
 //        novaRunda();
     }
 }
+
+//korak po korak
+//let korakPoKorakArray = [];
+//let slaveKorak = 0;
+//let masterKorak = 0;
+//function obradiKorakPoKorak(data) {
+//    korakPoKorakArray = [];
+//    korakPoKorakArray.push(data);
+//    if (korakPoKorakArray.length != 0) {
+//        io.emit('spremiKorakPoKorak', korakPoKorakArray[0]);
+//    }
+//}
