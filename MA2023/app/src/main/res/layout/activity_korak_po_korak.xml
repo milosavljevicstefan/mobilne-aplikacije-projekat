@@ -7,7 +7,7 @@
     tools:context=".activities.KorakPoKorakActivity">
 
     <TextView
-        android:id="@+id/timerTextView3"
+        android:id="@+id/timerTextView2"
         android:layout_width="115dp"
         android:layout_height="60dp"
         android:layout_weight="1"
@@ -116,18 +116,6 @@
 
 
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="315dp"
-        android:layout_height="32dp"
-        android:progress="0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.552"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.078" />
 
     <TextView
         android:id="@+id/korak1"
@@ -221,7 +209,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/textView8"
+        android:id="@+id/resenje"
         android:layout_width="412dp"
         android:layout_height="45dp"
         android:text="RESENJE"

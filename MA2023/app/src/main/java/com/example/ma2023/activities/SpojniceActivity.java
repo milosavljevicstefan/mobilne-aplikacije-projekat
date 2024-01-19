@@ -165,7 +165,7 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
 
 
         mSocket.on("spremiSpojnice", (data) -> {
-            Log.d("LOOOOG", "LOOOOOGGG: Received data: " + data[0].toString());
+//            Log.d("LOOOOG", "LOOOOOGGG: Received data: " + data[0].toString());
             try {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
@@ -303,10 +303,10 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
 
                 int randomIndex = new Random().nextInt(spojniceZaIgru.size());
                 Spojnica randomSpojnica = spojniceZaIgru.get(randomIndex);
-                Log.d("spojnice", "Log 2: Received data: " + randomSpojnica.toString());
+//                Log.d("spojnice", "Log 2: Received data: " + randomSpojnica.toString());
 
                 TextView pitanjeTextView = findViewById(R.id.textView17);
-                Log.d("spojnice", "Log 3: Received data: " + randomSpojnica.getTekstPitanja());
+//                Log.d("spojnice", "Log 3: Received data: " + randomSpojnica.getTekstPitanja());
 
                 //POSTAVLJANEJ PITANJA
 //                pitanjeTextView.setText(randomSpojnica.getTekstPitanja());
@@ -314,13 +314,13 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
 //            if (spojniceZaIgru != null && !spojniceZaIgru.isEmpty()) {
 
 //                Spojnica spojnica = spojniceZaIgru.get(1);
-                Log.d("spojnice", "Log 4: Received data: " + randomSpojnica.toString());
-                Log.d("spojnice", "Log AAAA: Received data: " + randomSpojnica.getParovi());
-                Log.d("PREPREPARE RUNDU", "AAAA: " + randomSpojnica);
+//                Log.d("spojnice", "Log 4: Received data: " + randomSpojnica.toString());
+//                Log.d("spojnice", "Log AAAA: Received data: " + randomSpojnica.getParovi());
+//                Log.d("PREPREPARE RUNDU", "AAAA: " + randomSpojnica);
 
                 data = prepareRunduData(randomSpojnica);
-                Log.d("spojnice", "Log 7: Received data: " + data.toString());
-                Log.d("POSLEPREPARE RUNDU", "BBBB: " + data);
+//                Log.d("spojnice", "Log 7: Received data: " + data.toString());
+//                Log.d("POSLEPREPARE RUNDU", "BBBB: " + data);
 
                 mSocket.emit("spremiIgru", "spojnice", data, 1);
             }
@@ -491,11 +491,11 @@ public class SpojniceActivity extends AppCompatActivity implements SpojnicaServi
                     omoguciSvaDugmadAExcept(reseniParovi, trenutnoKliknutoDugmeA);
                     onemoguciSvaDugmadBExcept(reseniParovi, buttonB);
                 }
-                Log.d("SpojniceActivity", "Number of clicked buttons A: " + pokusajiA.size());
-                Log.d("SpojniceActivity", "Total number of buttons A: " + aButtons.size());
+//                Log.d("SpojniceActivity", "Number of clicked buttons A: " + pokusajiA.size());
+//                Log.d("SpojniceActivity", "Total number of buttons A: " + aButtons.size());
                 if (pokusajiA.size() == aButtons.size()) {
                     // If yes, emit an event for the second round
-                    Log.d("SpojniceActivity", "All buttons A clicked. Emitting event for the second round.");
+//                    Log.d("SpojniceActivity", "All buttons A clicked. Emitting event for the second round.");
 //                    mSocket.emit("spremiIgru", "spojnice", data, 2);
 //                    krajIgre();
                 }
