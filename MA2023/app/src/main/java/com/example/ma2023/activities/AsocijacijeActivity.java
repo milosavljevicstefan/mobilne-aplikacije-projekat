@@ -43,7 +43,7 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
     private Button c1Button, c2Button, c3Button, c4Button;
     private Button d1Button, d2Button, d3Button, d4Button;
     private Button aButton, bButton, cButton, dButton, finalWordButton;
-
+    private Button[] allButtons;
     private int value = 0;
 
     private Button selectedButton = null;
@@ -132,7 +132,7 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
                     this.mSocket.emit("runduDataRedirect", runduData.toString()); // Emit to all sockets
                 }
             }
-            else if (Integer.valueOf(String.valueOf(runda)) == 3) {
+            else if (Integer.valueOf(String.valueOf(runda)) == 2) {
                     Log.d("asocijacije", "kraj");
 //                intent.putExtra("aName", aName.getText());
 //                intent.putExtra("bName", bName.getText());
@@ -278,9 +278,21 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
 
 
     }
+    private void enableAllButtons() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (Button button : allButtons) {
+                    Log.d("asocijacije","dugme " + button.getId());
+                    if (!button.isEnabled()) {
+                       button.setEnabled(true);
+                    }
+                }
+            }
+        });
+    }
 
-    private void spremiRundu(Asocijacija asocijacija) {
-        trenutnaAsocijacija = asocijacija;
+    private void initializeButtons() {
         b1Button = findViewById(R.id.button6nB1);
         b2Button = findViewById(R.id.button6nB2);
         b3Button = findViewById(R.id.button6nB3);
@@ -302,6 +314,20 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
         a2Button = findViewById(R.id.button6nA2);
         a3Button = findViewById(R.id.button6nA3);
         a4Button = findViewById(R.id.button6nA4);
+
+        // Initialize the array with all buttons
+        allButtons = new Button[]{
+                b1Button, b2Button, b3Button, b4Button, finalWordButton,
+                aButton, bButton, cButton, c4Button, c3Button, c2Button, c1Button,
+                dButton, d4Button, d3Button, d2Button, d1Button, a1Button, a2Button, a3Button, a4Button
+        };
+    }
+
+    private void spremiRundu(Asocijacija asocijacija) {
+        Log.d("asocijacije", "USAO U SPREMI RUNDUUUUU");
+        trenutnaAsocijacija = asocijacija;
+        initializeButtons();
+
         View.OnClickListener buttonClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -410,6 +436,8 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
         a2Button.setOnClickListener(buttonClickListener);
         a3Button.setOnClickListener(buttonClickListener);
         a4Button.setOnClickListener(buttonClickListener);
+        enableAllButtons();
+        changeTurn();
     }
 
 
@@ -532,19 +560,24 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
                     }
 
                     if (userGuess.equalsIgnoreCase(correctAnswer)) {
-                        Log.d("asocijacije", "pogodak");
+                        Log.d("asocijacije", "pogodak1");
                         if (button.getId() == R.id.button6nKonacno) {
+                            Log.d("asocijacije", "konacno resenje jeste!");
                             JSONObject finalWordData = new JSONObject();
                             try {
                                 finalWordData.put("correctAnswer", correctAnswer);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            mSocket.emit("sledecaRundaKoZnaZna", finalWordData);
+//                            displayGuessedClues(correctAnswer);
+                            mSocket.emit("sledecaRundaKoZnaZna");
+                            changeTurn();
+                        } else {
+                            Log.d("asocijacije", "konacno resenje nije!");
+                            displayGuessedClues(correctAnswer);
+                            changeTurn();
                         }
-//                        displayGuessedClues(correctAnswer);
 
-                        changeTurn();
                     } else {
                         Log.d("asocijacije", "odgodak");
                         changeTurn();
@@ -552,7 +585,6 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
                     editTextGuess.getText().clear();
                     editTextGuess.setVisibility(View.GONE);
                     buttonSubmitGuess.setVisibility(View.GONE);
-
 
                 }
 
@@ -608,44 +640,44 @@ public class AsocijacijeActivity extends AppCompatActivity implements Asocijacij
         buttonSubmitGuess.setVisibility(View.VISIBLE);
 
         // Set an onClickListener for the submit Button
-        buttonSubmitGuess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String userGuess = editTextGuess.getText().toString().trim();
-
-                // Check if selectedButton is null
-                if (selectedButton == null) {
-                    // Display a toast message
-                    ToastIzaberi();
-                    return;
-                }
-
-                if (userGuess.equalsIgnoreCase(correctAnswer)) {
-                    Log.d("asocijacije", "pogodak");
-                    if (button.getId() == R.id.button6nKonacno) {
-                        Log.d("asocijacije", "konacno resenje jeste!");
-                        JSONObject finalWordData = new JSONObject();
-                        try {
-                            finalWordData.put("correctAnswer", correctAnswer);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        mSocket.emit("sledecaRundaKoZnaZna");
-                    }
+//        buttonSubmitGuess.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String userGuess = editTextGuess.getText().toString().trim();
+//
+//                // Check if selectedButton is null
+//                if (selectedButton == null) {
+//                    // Display a toast message
+//                    ToastIzaberi();
+//                    return;
+//                }
+//
+//                if (userGuess.equalsIgnoreCase(correctAnswer)) {
+//                    Log.d("asocijacije", "pogodak2");
+//                    if (button.getId() == R.id.button6nKonacno) {
+//                        Log.d("asocijacije", "konacno resenje jeste!");
+//                        JSONObject finalWordData = new JSONObject();
+//                        try {
+//                            finalWordData.put("correctAnswer", correctAnswer);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        mSocket.emit("sledecaRundaKoZnaZna");
+//                    }
 //                    displayGuessedClues(correctAnswer);
+////                    changeTurn();
+//                } else {
+//                    Log.d("asocijacije", "odgodak");
 //                    changeTurn();
-                } else {
-                    Log.d("asocijacije", "odgodak");
-                    changeTurn();
-                }
-                editTextGuess.getText().clear();
-                editTextGuess.setVisibility(View.GONE);
-                buttonSubmitGuess.setVisibility(View.GONE);
-
-
-            }
-
-        });
+//                }
+//                editTextGuess.getText().clear();
+//                editTextGuess.setVisibility(View.GONE);
+//                buttonSubmitGuess.setVisibility(View.GONE);
+//
+//
+//            }
+//
+//        });
 
 
     }
